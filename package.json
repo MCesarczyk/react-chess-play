@@ -4,10 +4,15 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "@nx/js": "19.1.0",
     "@nx/workspace": "19.1.0",
+    "cz-conventional-changelog": "^3.3.0",
     "nx": "19.1.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
