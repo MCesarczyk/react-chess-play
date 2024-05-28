@@ -1,8 +1,9 @@
 import { ReactElement } from 'react';
+import clsx from 'clsx';
 
 import king from '../assets/king.png';
 import pawn from '../assets/pawn.png';
-import clsx from 'clsx';
+import knight from '../assets/knight_b.png';
 
 export type Coord = [number, number];
 
@@ -11,7 +12,7 @@ export type PieceRecord = {
   location: Coord;
 };
 
-export type PieceType = 'king' | 'pawn';
+export type PieceType = 'king' | 'pawn' | 'knight';
 
 type PieceProps = {
   image: string;
@@ -27,6 +28,7 @@ export const pieceLookup: {
 } = {
   king: () => <King />,
   pawn: () => <Pawn />,
+  knight: () => <Knight />,
 };
 
 function renderSquares(pieces: PieceRecord[]) {
@@ -59,8 +61,9 @@ function renderSquares(pieces: PieceRecord[]) {
 
 export function App() {
   const pieces: PieceRecord[] = [
-    { type: 'king', location: [3, 2] },
-    { type: 'pawn', location: [1, 6] },
+    // { type: 'king', location: [3, 2] },
+    // { type: 'pawn', location: [1, 6] },
+    { type: 'knight', location: [4, 4] },
   ];
 
   return (
@@ -89,4 +92,8 @@ export function King() {
 
 export function Pawn() {
   return <Piece image={pawn} alt="Pawn" />;
+}
+
+export function Knight() {
+  return <Piece image={knight} alt="Knight" />;
 }
