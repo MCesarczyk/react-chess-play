@@ -1,5 +1,6 @@
 import { ReactElement, useState } from 'react';
 import clsx from 'clsx';
+import { useDrag } from 'react-dnd';
 
 import king from '../assets/king.png';
 import pawn from '../assets/pawn.png';
@@ -15,6 +16,7 @@ export type PieceRecord = {
 export type PieceType = 'king' | 'pawn' | 'knight';
 
 type PieceProps = {
+  type: PieceType;
   image: string;
   alt: string;
 };
@@ -110,10 +112,21 @@ export function App() {
   );
 }
 
-function Piece({ image, alt }: PieceProps) {
+function Piece({ type, image, alt }: PieceProps) {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
   return (
     <img
-      className="p-1 m-2 rounded-lg shadow-xl bg-gray-400 hover:bg-gray-600"
+      ref={drag}
+      className={clsx(
+        'p-1 m-2 rounded-lg shadow-xl bg-gray-400 hover:bg-gray-600',
+        isDragging && 'opacity-50 bg-opacity-50 border-2'
+      )}
       height="80%"
       width="80%"
       src={image}
@@ -124,13 +137,13 @@ function Piece({ image, alt }: PieceProps) {
 }
 
 export function King() {
-  return <Piece image={king} alt="King" />;
+  return <Piece type="king" image={king} alt="King" />;
 }
 
 export function Pawn() {
-  return <Piece image={pawn} alt="Pawn" />;
+  return <Piece type="pawn" image={pawn} alt="Pawn" />;
 }
 
 export function Knight() {
-  return <Piece image={knight} alt="Knight" />;
+  return <Piece type="knight" image={knight} alt="Knight" />;
 }
