@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react';
 import clsx from 'clsx';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
 import king from '../assets/king.png';
 import pawn from '../assets/pawn.png';
@@ -25,13 +25,54 @@ export function isEqualCoord(c1: Coord, c2: Coord): boolean {
   return c1[0] === c2[0] && c1[1] === c2[1];
 }
 
-export const pieceLookup: {
-  [Key in PieceType]: () => ReactElement;
-} = {
-  king: () => <King />,
-  pawn: () => <Pawn />,
-  knight: () => <Knight />,
-};
+function Square({
+  row,
+  col,
+  piece,
+  onSquareClick,
+}: {
+  row: number;
+  col: number;
+  piece: PieceRecord | undefined;
+  onSquareClick: (coord: Coord) => void;
+}) {
+  const isDark = (row + col) % 2 === 1;
+  const squareCoord: Coord = [row, col];
+
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: 'knight',
+      drop: () => onSquareClick(squareCoord),
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+      }),
+    }),
+    [row, col]
+  );
+
+  const pieceLookup: {
+    [Key in PieceType]: () => ReactElement;
+  } = {
+    king: () => <King />,
+    pawn: () => <Pawn />,
+    knight: () => <Knight />,
+  };
+
+  return (
+    <div
+      key={`${row}-${col}`}
+      ref={drop}
+      className={clsx(
+        'w-full h-full grid place-items-center',
+        isDark ? 'bg-gray-700' : 'bg-white',
+        isOver && 'bg-yellow-300'
+      )}
+      onClick={() => onSquareClick(squareCoord)}
+    >
+      {piece && pieceLookup[piece.type]()}
+    </div>
+  );
+}
 
 function renderSquares(
   pieces: PieceRecord[],
@@ -46,19 +87,16 @@ function renderSquares(
         isEqualCoord(piece.location, squareCoord)
       );
 
-      const isDark = (row + col) % 2 === 1;
-
       squares.push(
-        <div
+        <Square
           key={`${row}-${col}`}
-          className={clsx(
-            'w-full h-full grid place-items-center',
-            isDark ? 'bg-gray-700' : 'bg-white'
-          )}
-          onClick={() => onSquareClick(squareCoord)}
-        >
-          {piece && pieceLookup[piece.type]()}
-        </div>
+          {...{
+            row,
+            col,
+            piece,
+            onSquareClick,
+          }}
+        />
       );
     }
   }
@@ -75,19 +113,6 @@ export function canMoveKnight(from: Coord, to: Coord) {
   );
 }
 
-export function movePiece(
-  pieces: PieceRecord[],
-  piece: PieceType,
-  to: Coord
-): PieceRecord[] {
-  const matchingPiece = pieces.find((p) => p.type === piece);
-  const restPieces = pieces.filter((p) => p.type !== piece);
-
-  return matchingPiece
-    ? [...restPieces, { ...matchingPiece, location: to }]
-    : pieces;
-}
-
 export function App() {
   const [pieces, setPieces] = useState<PieceRecord[]>([
     // { type: 'king', location: [3, 2] },
@@ -95,13 +120,24 @@ export function App() {
     { type: 'knight', location: [4, 4] },
   ]);
 
-  const handleSquareClick = (coord: Coord) => {
-    const knight = pieces.find((p) => p.type === 'knight');
+  function movePiece(pieces: PieceRecord[], piece: PieceType, to: Coord): void {
+    const matchingPiece = pieces.find((p) => p.type === piece);
+    const restPieces = pieces.filter((p) => p.type !== piece);
 
+    setPieces(
+      matchingPiece
+        ? [...restPieces, { ...matchingPiece, location: to }]
+        : pieces
+    );
+  }
+
+  const knight = pieces.find((p) => p.type === 'knight');
+
+  const handleSquareClick = (coord: Coord) => {
     if (knight && canMoveKnight(knight.location, coord)) {
       console.log('Moving knight to:', coord);
 
-      setPieces(movePiece(pieces, 'knight', coord));
+      movePiece(pieces, 'knight', coord);
     }
   };
 
