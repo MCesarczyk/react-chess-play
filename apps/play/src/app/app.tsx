@@ -1,10 +1,7 @@
 import { ReactElement, useState } from 'react';
 import clsx from 'clsx';
-import { useDrag, useDrop } from 'react-dnd';
-
-import king from '../assets/king.png';
-import pawn from '../assets/pawn.png';
-import knight from '../assets/knight_b.png';
+import { useDrop } from 'react-dnd';
+import { King, Knight, Pawn } from './Piece';
 
 export type Coord = [number, number];
 
@@ -14,12 +11,6 @@ export type PieceRecord = {
 };
 
 export type PieceType = 'king' | 'pawn' | 'knight';
-
-type PieceProps = {
-  type: PieceType;
-  image: string;
-  alt: string;
-};
 
 export function isEqualCoord(c1: Coord, c2: Coord): boolean {
   return c1[0] === c2[0] && c1[1] === c2[1];
@@ -146,40 +137,4 @@ export function App() {
       {renderSquares(pieces, handleSquareClick)}
     </div>
   );
-}
-
-function Piece({ type, image, alt }: PieceProps) {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type,
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
-
-  return (
-    <img
-      ref={drag}
-      className={clsx(
-        'p-1 m-2 rounded-lg shadow-xl bg-gray-400 hover:bg-gray-600',
-        isDragging && 'opacity-50 bg-opacity-50 border-2'
-      )}
-      height="80%"
-      width="80%"
-      src={image}
-      alt={alt}
-      draggable="false"
-    />
-  ); // draggable set to false to prevent dragging of the images
-}
-
-export function King() {
-  return <Piece type="king" image={king} alt="King" />;
-}
-
-export function Pawn() {
-  return <Piece type="pawn" image={pawn} alt="Pawn" />;
-}
-
-export function Knight() {
-  return <Piece type="knight" image={knight} alt="Knight" />;
 }

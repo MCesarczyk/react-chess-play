@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { App } from './app/app';
+import { Knight } from './app/Piece';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <DndProvider backend={HTML5Backend}>
-      <App />
+      <Knight />
     </DndProvider>
   </StrictMode>
 );
