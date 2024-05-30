@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react';
-import clsx from 'clsx';
 import { useDrop } from 'react-dnd';
 import { King, Knight, Pawn } from './Piece';
+import { Square } from './Square';
 
 export type Coord = [number, number];
 
@@ -16,7 +16,7 @@ export function isEqualCoord(c1: Coord, c2: Coord): boolean {
   return c1[0] === c2[0] && c1[1] === c2[1];
 }
 
-function Square({
+function BoardSquare({
   row,
   col,
   piece,
@@ -50,18 +50,9 @@ function Square({
   };
 
   return (
-    <div
-      key={`${row}-${col}`}
-      ref={drop}
-      className={clsx(
-        'w-full h-full grid place-items-center',
-        isDark ? 'bg-gray-700' : 'bg-white',
-        isOver && 'bg-yellow-300'
-      )}
-      onClick={() => onSquareClick(squareCoord)}
-    >
+    <Square row={row} col={col} isDark={isDark}>
       {piece && pieceLookup[piece.type]()}
-    </div>
+    </Square>
   );
 }
 
@@ -79,7 +70,7 @@ function renderSquares(
       );
 
       squares.push(
-        <Square
+        <BoardSquare
           key={`${row}-${col}`}
           {...{
             row,
