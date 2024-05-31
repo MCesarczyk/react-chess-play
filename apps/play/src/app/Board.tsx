@@ -1,3 +1,4 @@
+import { canMoveKnight, moveKnight } from '../Game';
 import { Coord } from '../types';
 import { Knight } from './Piece';
 import { Square } from './Square';
@@ -13,6 +14,12 @@ export function isEqualCoord(c1: Coord, c2: Coord): boolean {
   return c1[0] === c2[0] && c1[1] === c2[1];
 }
 
+const onSquareClick = (coord: Coord) => {
+  if (canMoveKnight(coord[0], coord[1])) {
+    moveKnight(coord[0], coord[1]);
+  }
+};
+
 function renderSquare(row: number, col: number, knightPosition: Coord) {
   const isKnightHere = isEqualCoord(knightPosition, [row, col]);
   const isDark = (row + col) % 2 === 1;
@@ -24,7 +31,7 @@ function renderSquare(row: number, col: number, knightPosition: Coord) {
         row,
         col,
         isDark,
-        // onSquareClick,
+        onSquareClick,
       }}
     >
       {isKnightHere && <Knight />}

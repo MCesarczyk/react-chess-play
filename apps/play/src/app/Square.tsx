@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Coord } from '../types';
 
 interface SquareProps {
   row: number;
@@ -6,9 +7,16 @@ interface SquareProps {
   isDark: boolean;
   // isOver: boolean;
   children: React.ReactNode;
+  onSquareClick: (coord: Coord) => void;
 }
 
-export const Square = ({ row, col, isDark, children }: SquareProps) => {
+export const Square = ({
+  row,
+  col,
+  isDark,
+  children,
+  onSquareClick,
+}: SquareProps) => {
   return (
     <div
       key={`${row}-${col}`}
@@ -18,7 +26,7 @@ export const Square = ({ row, col, isDark, children }: SquareProps) => {
         isDark ? 'bg-gray-700' : 'bg-white'
         // isOver && 'bg-yellow-300'
       )}
-      // onClick={() => onSquareClick(squareCoord)}
+      onClick={() => onSquareClick([row, col])}
     >
       {children}
     </div>

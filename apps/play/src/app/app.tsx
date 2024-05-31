@@ -49,7 +49,7 @@ function BoardSquare({
   };
 
   return (
-    <Square row={row} col={col} isDark={isDark}>
+    <Square row={row} col={col} isDark={isDark} onSquareClick={onSquareClick}>
       {piece && pieceLookup[piece.type]()}
     </Square>
   );
