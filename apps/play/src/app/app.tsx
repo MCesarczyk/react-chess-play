@@ -2,8 +2,7 @@ import { ReactElement, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { King, Knight, Pawn } from './Piece';
 import { Square } from './Square';
-
-export type Coord = [number, number];
+import { Coord } from '../types';
 
 export type PieceType = 'king' | 'pawn' | 'knight';
 

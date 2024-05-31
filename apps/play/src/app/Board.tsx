@@ -1,9 +1,8 @@
+import { Coord } from '../types';
 import { Knight } from './Piece';
 import { Square } from './Square';
 
 export type PieceType = 'king' | 'pawn' | 'knight';
-
-export type Coord = [number, number];
 
 export type PieceRecord = {
   type: PieceType;
