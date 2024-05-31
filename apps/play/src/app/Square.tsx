@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, useEffect, useState } from 'react';
+import { ForwardedRef, forwardRef } from 'react';
 
 interface SquareProps {
   isDark: boolean;
@@ -11,28 +11,27 @@ export const Square = forwardRef(
   (props: SquareProps, ref: ForwardedRef<HTMLDivElement>) => {
     const { isDark, isAllowed, isForbidden, children } = props;
 
-    const baseStyle = 'w-full h-full grid place-items-center bg-white';
+    let bgColor = undefined;
 
-    const [className, setClassName] = useState(baseStyle);
-
-    useEffect(() => {
-      switch (true) {
-        case isAllowed:
-          setClassName('w-full h-full grid place-items-center bg-yellow-300');
-          break;
-        case isForbidden:
-          setClassName('w-full h-full grid place-items-center bg-red-300');
-          break;
-        case isDark:
-          setClassName('w-full h-full grid place-items-center bg-gray-700');
-          break;
-        default:
-          setClassName(baseStyle);
-      }
-    }, [baseStyle, isAllowed, isDark, isForbidden]);
+    if (isAllowed) {
+      bgColor = '#fffc5c';
+    } else if (isForbidden) {
+      bgColor = '#ff6459';
+    } else {
+      bgColor = isDark ? '#111' : '#fff';
+    }
 
     return (
-      <div ref={ref} className={className}>
+      <div
+        ref={ref}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'grid',
+          placeItems: 'center',
+          backgroundColor: bgColor,
+        }}
+      >
         {children}
       </div>
     );

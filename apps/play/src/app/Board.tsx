@@ -1,38 +1,35 @@
+import { useEffect, useState } from 'react';
+import { Game } from '../Game';
 import { Coord } from '../types';
 import { BoardSquare } from './BoardSquare';
 import { Knight } from './Piece';
 
-export type PieceType = 'king' | 'pawn' | 'knight';
-
-export type PieceRecord = {
-  type: PieceType;
-  location: Coord;
-};
-
-export function isEqualCoord(c1: Coord, c2: Coord): boolean {
-  return c1[0] === c2[0] && c1[1] === c2[1];
-}
-
-function renderSquare(row: number, col: number, knightPosition: Coord) {
-  const isKnightHere = isEqualCoord(knightPosition, [row, col]);
-
-  return (
-    <BoardSquare key={`${row}-${col}`} row={row} col={col}>
-      {isKnightHere && <Knight />}
-    </BoardSquare>
-  );
-}
-
 interface BoardProps {
-  knightPosition: Coord;
+  game: Game;
 }
 
-export const Board = ({ knightPosition }: BoardProps) => {
+export const Board = ({ game }: BoardProps) => {
+  const [knightPosition, setKnightPosition] = useState<Coord>(
+    game.knightPosition
+  );
+
+  useEffect(() => game.observe(setKnightPosition), [game]);
+
+  function renderSquare(row: number, col: number) {
+    const isKnightHere = game.isEqualCoord(knightPosition, [row, col]);
+
+    return (
+      <BoardSquare key={`${row}-${col}`} row={row} col={col} game={game}>
+        {isKnightHere && <Knight />}
+      </BoardSquare>
+    );
+  }
+
   const squares: JSX.Element[] = [];
 
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
-      squares.push(renderSquare(row, col, knightPosition));
+      squares.push(renderSquare(row, col));
     }
   }
 
