@@ -5,12 +5,12 @@ import { Square } from './Square';
 
 export type Coord = [number, number];
 
+export type PieceType = 'king' | 'pawn' | 'knight';
+
 export type PieceRecord = {
   type: PieceType;
   location: Coord;
 };
-
-export type PieceType = 'king' | 'pawn' | 'knight';
 
 export function isEqualCoord(c1: Coord, c2: Coord): boolean {
   return c1[0] === c2[0] && c1[1] === c2[1];
@@ -56,34 +56,34 @@ function BoardSquare({
   );
 }
 
-function renderSquares(
-  pieces: PieceRecord[],
-  onSquareClick: (coord: Coord) => void
-) {
-  const squares = [];
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      const squareCoord: Coord = [row, col];
+// function renderSquares(
+//   pieces: PieceRecord[],
+//   onSquareClick: (coord: Coord) => void
+// ) {
+//   const squares = [];
+//   for (let row = 0; row < 8; row++) {
+//     for (let col = 0; col < 8; col++) {
+//       const squareCoord: Coord = [row, col];
 
-      const piece = pieces.find((piece) =>
-        isEqualCoord(piece.location, squareCoord)
-      );
+//       const piece = pieces.find((piece) =>
+//         isEqualCoord(piece.location, squareCoord)
+//       );
 
-      squares.push(
-        <BoardSquare
-          key={`${row}-${col}`}
-          {...{
-            row,
-            col,
-            piece,
-            onSquareClick,
-          }}
-        />
-      );
-    }
-  }
-  return squares;
-}
+//       squares.push(
+//         <BoardSquare
+//           key={`${row}-${col}`}
+//           {...{
+//             row,
+//             col,
+//             piece,
+//             onSquareClick,
+//           }}
+//         />
+//       );
+//     }
+//   }
+//   return squares;
+// }
 
 export function canMoveKnight(from: Coord, to: Coord) {
   const dx = to[0] - from[0];
@@ -125,7 +125,7 @@ export function App() {
 
   return (
     <div className="grid grid-cols-8 grid-rows-8 w-max h-max max-w-xl aspect-square border-4 border-gray-500">
-      {renderSquares(pieces, handleSquareClick)}
+      {/* {renderSquares(pieces, handleSquareClick)} */}
     </div>
   );
 }
