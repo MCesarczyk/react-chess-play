@@ -1,3 +1,4 @@
+import { useDrag } from 'react-dnd';
 import clsx from 'clsx';
 
 import king from '../assets/king.png';
@@ -13,19 +14,19 @@ interface PieceProps {
 }
 
 function Piece({ type, image, alt }: PieceProps) {
-  // const [{ isDragging }, drag] = useDrag(() => ({
-  //   type,
-  //   collect: (monitor) => ({
-  //     isDragging: !!monitor.isDragging(),
-  //   }),
-  // }));
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
 
   return (
     <img
-      // ref={drag}
+      ref={drag}
       className={clsx(
-        'p-1 m-2 rounded-lg shadow-xl bg-gray-400 hover:bg-gray-600'
-        // isDragging && 'opacity-50 bg-opacity-50 border-2'
+        'p-1 m-2 rounded-lg shadow-xl bg-gray-400 hover:bg-gray-600',
+        isDragging && 'opacity-50 bg-opacity-50 border-2'
       )}
       height="80%"
       width="80%"
