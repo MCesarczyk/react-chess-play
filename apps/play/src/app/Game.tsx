@@ -11,6 +11,11 @@ export class Game {
 
   private observers: Observer[] = [];
 
+  private emitChange() {
+    const pieces = this.pieces;
+    this.observers.forEach((observer) => observer && observer(pieces));
+  }
+
   public observe(receive: Observer) {
     this.observers.push(receive);
     this.emitChange();
@@ -20,16 +25,7 @@ export class Game {
     };
   }
 
-  private foundPiece(pieceType: PieceType): PieceRecord | undefined {
-    return this.pieces.find((p) => p.type === pieceType);
-  }
-
   public movePiece(pieceType: PieceType, toX: number, toY: number) {
-    const currentPiece = this.foundPiece(pieceType);
-    if (!currentPiece) {
-      return;
-    }
-
     const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
       if (p.type === pieceType) {
         return { ...p, location: [toX, toY] };
@@ -41,6 +37,10 @@ export class Game {
     this.pieces = updatedPieces;
 
     this.emitChange();
+  }
+
+  private foundPiece(pieceType: PieceType): PieceRecord | undefined {
+    return this.pieces.find((p) => p.type === pieceType);
   }
 
   public canMovePiece(pieceType: PieceType, toX: number, toY: number) {
@@ -65,10 +65,5 @@ export class Game {
     }
 
     return c1[0] === c2[0] && c1[1] === c2[1];
-  }
-
-  private emitChange() {
-    const pieces = this.pieces;
-    this.observers.forEach((observer) => observer && observer(pieces));
   }
 }

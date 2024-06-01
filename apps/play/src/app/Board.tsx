@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Game } from './Game';
-import { PieceRecord, PieceType } from './types';
+import { PieceRecord } from './types';
 import { BoardSquare } from './BoardSquare';
-import { King, Knight, Pawn } from './Piece';
+import { BoardPiece } from './BoardPiece';
 
 interface BoardProps {
   game: Game;
@@ -14,24 +14,13 @@ export const Board = ({ game }: BoardProps) => {
   useEffect(() => game.observe(setPieces), [game]);
 
   function renderSquare(row: number, col: number) {
-    const isKnightHere = game.isEqualCoord(
-      pieces.find((p) => p.type === PieceType.KNIGHT)?.location,
-      [row, col]
-    );
-    const isPawnHere = game.isEqualCoord(
-      pieces.find((p) => p.type === PieceType.PAWN)?.location,
-      [row, col]
-    );
-    const isKingHere = game.isEqualCoord(
-      pieces.find((p) => p.type === PieceType.KING)?.location,
-      [row, col]
+    const currentPiece = pieces.find((p) =>
+      game.isEqualCoord(p.location, [row, col])
     );
 
     return (
       <BoardSquare key={`${row}-${col}`} row={row} col={col} game={game}>
-        {isKnightHere && <Knight />}
-        {isPawnHere && <Pawn />}
-        {isKingHere && <King />}
+        {currentPiece && <BoardPiece type={currentPiece.type} />}
       </BoardSquare>
     );
   }

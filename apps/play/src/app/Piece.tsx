@@ -1,9 +1,6 @@
 import { useDrag } from 'react-dnd';
 import clsx from 'clsx';
 
-import king from '../assets/king.png';
-import pawn from '../assets/pawn.png';
-import knight from '../assets/knight_b.png';
 import { PieceType } from './types';
 
 interface PieceProps {
@@ -12,7 +9,7 @@ interface PieceProps {
   alt: string;
 }
 
-function Piece({ type, image, alt }: PieceProps) {
+export function Piece({ type, image, alt }: PieceProps) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type,
     collect: (monitor) => ({
@@ -34,16 +31,4 @@ function Piece({ type, image, alt }: PieceProps) {
       draggable="false"
     />
   );
-}
-
-export function King() {
-  return <Piece type={PieceType.KING} image={king} alt="King" />;
-}
-
-export function Pawn() {
-  return <Piece type={PieceType.PAWN} image={pawn} alt="Pawn" />;
-}
-
-export function Knight() {
-  return <Piece type={PieceType.KNIGHT} image={knight} alt="Knight" />;
 }
