@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import king from '../assets/king.png';
 import pawn from '../assets/pawn.png';
 import knight from '../assets/knight_b.png';
-import { PieceType } from '../types';
+import { PieceType } from './types';
 
 interface PieceProps {
   type: PieceType;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Game } from '../Game';
-import { PieceRecord, PieceType } from '../types';
+import { Game } from './Game';
+import { PieceRecord, PieceType } from './types';
 import { BoardSquare } from './BoardSquare';
 import { King, Knight, Pawn } from './Piece';
 

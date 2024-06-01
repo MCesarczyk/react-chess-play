@@ -1,7 +1,7 @@
 import { useDrop } from 'react-dnd';
 import { Square } from './Square';
-import { Game } from '../Game';
-import { PieceType } from '../types';
+import { Game } from './Game';
+import { PieceType } from './types';
 
 interface BoardSquareProps {
   row: number;
