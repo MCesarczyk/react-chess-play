@@ -1,9 +1,14 @@
-import { Coord } from './types';
+import { Coord, PieceRecord, PieceType } from './types';
 
-type Observer = ((knightPosition: Coord) => void) | null;
+type Observer = ((pieces: PieceRecord[]) => void) | null;
 
 export class Game {
-  public knightPosition: Coord = [2, 4];
+  public pieces: PieceRecord[] = [
+    { type: PieceType.KNIGHT, location: [3, 2] },
+    { type: PieceType.PAWN, location: [1, 6] },
+    { type: PieceType.KING, location: [4, 4] },
+  ];
+
   private observers: Observer[] = [];
 
   public observe(receive: Observer) {
@@ -15,13 +20,36 @@ export class Game {
     };
   }
 
-  public moveKnight(toX: number, toY: number) {
-    this.knightPosition = [toX, toY];
+  private foundPiece(pieceType: PieceType): PieceRecord | undefined {
+    return this.pieces.find((p) => p.type === pieceType);
+  }
+
+  public movePiece(pieceType: PieceType, toX: number, toY: number) {
+    const currentPiece = this.foundPiece(pieceType);
+    if (!currentPiece) {
+      return;
+    }
+
+    const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
+      if (p.type === pieceType) {
+        return { ...p, location: [toX, toY] };
+      }
+
+      return p;
+    });
+
+    this.pieces = updatedPieces;
+
     this.emitChange();
   }
 
-  public canMoveKnight(toX: number, toY: number) {
-    const [x, y] = this.knightPosition;
+  public canMovePiece(pieceType: PieceType, toX: number, toY: number) {
+    const currentPiece = this.foundPiece(pieceType);
+    if (!currentPiece) {
+      return false;
+    }
+
+    const [x, y] = currentPiece.location;
     const dx = toX - x;
     const dy = toY - y;
 
@@ -31,12 +59,16 @@ export class Game {
     );
   }
 
-  public isEqualCoord(c1: Coord, c2: Coord): boolean {
+  public isEqualCoord(c1: Coord | undefined, c2: Coord | undefined): boolean {
+    if (!c1 || !c2) {
+      return false;
+    }
+
     return c1[0] === c2[0] && c1[1] === c2[1];
   }
 
   private emitChange() {
-    const position = this.knightPosition;
-    this.observers.forEach((observer) => observer && observer(position));
+    const pieces = this.pieces;
+    this.observers.forEach((observer) => observer && observer(pieces));
   }
 }

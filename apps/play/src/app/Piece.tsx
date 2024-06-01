@@ -4,8 +4,7 @@ import clsx from 'clsx';
 import king from '../assets/king.png';
 import pawn from '../assets/pawn.png';
 import knight from '../assets/knight_b.png';
-
-type PieceType = 'king' | 'pawn' | 'knight';
+import { PieceType } from '../types';
 
 interface PieceProps {
   type: PieceType;
@@ -38,13 +37,13 @@ function Piece({ type, image, alt }: PieceProps) {
 }
 
 export function King() {
-  return <Piece type="king" image={king} alt="King" />;
+  return <Piece type={PieceType.KING} image={king} alt="King" />;
 }
 
 export function Pawn() {
-  return <Piece type="pawn" image={pawn} alt="Pawn" />;
+  return <Piece type={PieceType.PAWN} image={pawn} alt="Pawn" />;
 }
 
 export function Knight() {
-  return <Piece type="knight" image={knight} alt="Knight" />;
+  return <Piece type={PieceType.KNIGHT} image={knight} alt="Knight" />;
 }

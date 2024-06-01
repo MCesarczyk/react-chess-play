@@ -1,6 +1,7 @@
 import { useDrop } from 'react-dnd';
 import { Square } from './Square';
 import { Game } from '../Game';
+import { PieceType } from '../types';
 
 interface BoardSquareProps {
   row: number;
@@ -14,9 +15,9 @@ export const BoardSquare = ({ row, col, children, game }: BoardSquareProps) => {
 
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
-      accept: 'knight',
-      drop: () => game.moveKnight(row, col),
-      canDrop: () => game.canMoveKnight(row, col),
+      accept: PieceType.KNIGHT,
+      drop: () => game.movePiece(PieceType.KNIGHT, row, col),
+      canDrop: () => game.canMovePiece(PieceType.KNIGHT, row, col),
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),
         canDrop: !!monitor.canDrop(),

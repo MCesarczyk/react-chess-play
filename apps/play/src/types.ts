@@ -1,5 +1,7 @@
 export enum PieceType {
-  KNIGHT = 'knight'
+  KNIGHT = 'knight',
+  PAWN = 'pawn',
+  KING = 'king',
 }
 
 export type Coord = [number, number];
