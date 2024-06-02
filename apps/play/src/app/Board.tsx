@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { Game } from './Game';
-import { PieceRecord, PieceType } from './types';
+import { PieceData, PieceRecord } from './types';
 import { BoardSquare } from './BoardSquare';
 import { BoardPiece } from './BoardPiece';
+import { Piece } from './Piece';
 
 interface BoardProps {
   game: Game;
@@ -11,7 +12,7 @@ interface BoardProps {
 
 export const Board = ({ game }: BoardProps) => {
   const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
-  const [draggedPiece, setDraggedPiece] = useState<PieceType | null>(null);
+  const [draggedPiece, setDraggedPiece] = useState<PieceData | null>(null);
 
   useEffect(() => {
     console.log(draggedPiece);
@@ -30,7 +31,7 @@ export const Board = ({ game }: BoardProps) => {
         row={row}
         col={col}
         game={game}
-        pieceType={draggedPiece}
+        pieceType={draggedPiece?.type}
       >
         {currentPiece && <BoardPiece type={currentPiece.type} />}
       </BoardSquare>
@@ -46,7 +47,7 @@ export const Board = ({ game }: BoardProps) => {
   }
 
   function handleDragStart(event: any) {
-    setDraggedPiece(event.active.id);
+    setDraggedPiece(event.active.data.current.piece);
 
     console.log(event);
   }
@@ -57,7 +58,7 @@ export const Board = ({ game }: BoardProps) => {
     console.log(event);
     draggedPiece &&
       game.movePiece(
-        draggedPiece,
+        draggedPiece.type,
         over.data.current.row,
         over.data.current.col
       );
@@ -80,6 +81,16 @@ export const Board = ({ game }: BoardProps) => {
       >
         {squares}
       </div>
+
+      <DragOverlay>
+        {draggedPiece ? (
+          <Piece
+            type={draggedPiece.type}
+            alt={draggedPiece.alt}
+            image={draggedPiece.image}
+          />
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 };

@@ -1,18 +1,13 @@
-import { Coord, PieceType } from './types';
+import { Coord, PieceData, PieceType } from './types';
 
 import king from '../assets/king.png';
 import pawn from '../assets/pawn.png';
 import knight from '../assets/knight_b.png';
 import { Piece } from './Piece';
 
-interface PieceData {
-  image: string;
-  alt: string;
-  canMovePiece: (from: Coord, to: Coord) => boolean;
-}
-
 const pieces = {
   [PieceType.KING]: {
+    type: PieceType.KING,
     image: king,
     alt: 'King',
     canMovePiece: (from: Coord, to: Coord) => {
@@ -23,6 +18,7 @@ const pieces = {
     },
   },
   [PieceType.PAWN]: {
+    type: PieceType.PAWN,
     image: pawn,
     alt: 'Pawn',
     canMovePiece: (from: Coord, to: Coord) => {
@@ -34,6 +30,7 @@ const pieces = {
     },
   },
   [PieceType.KNIGHT]: {
+    type: PieceType.KNIGHT,
     image: knight,
     alt: 'Knight',
     canMovePiece: (from: Coord, to: Coord) => {
@@ -52,16 +49,10 @@ export const findPiece = (type: PieceType): PieceData => pieces[type];
 
 interface BoardPieceProps {
   type: PieceType;
-  setDraggedPiece?: (pieceType: PieceType) => void;
 }
 
-export const BoardPiece = ({ type, setDraggedPiece }: BoardPieceProps) => {
+export const BoardPiece = ({ type }: BoardPieceProps) => {
   return (
-    <Piece
-      type={type}
-      image={pieces[type].image}
-      alt={pieces[type].alt}
-      setDraggedPiece={setDraggedPiece}
-    />
+    <Piece type={type} image={pieces[type].image} alt={pieces[type].alt} />
   );
 };

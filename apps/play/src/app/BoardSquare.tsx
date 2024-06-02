@@ -9,7 +9,7 @@ interface BoardSquareProps {
   col: number;
   children: React.ReactNode;
   game: Game;
-  pieceType: PieceType | null;
+  pieceType: PieceType | undefined;
 }
 
 export const BoardSquare = ({
@@ -20,14 +20,6 @@ export const BoardSquare = ({
   pieceType,
 }: BoardSquareProps) => {
   const isDark = (row + col) % 2 === 1;
-
-  const movePiece = () => {
-    if (!pieceType) {
-      return;
-    }
-
-    game.movePiece(pieceType, row, col);
-  };
 
   const canMovePiece = () => {
     if (!pieceType) {
