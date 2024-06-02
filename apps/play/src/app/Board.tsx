@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { DndContext } from '@dnd-kit/core';
 import { Game } from './Game';
 import { PieceRecord, PieceType } from './types';
 import { BoardSquare } from './BoardSquare';
@@ -11,6 +12,10 @@ interface BoardProps {
 export const Board = ({ game }: BoardProps) => {
   const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
   const [draggedPiece, setDraggedPiece] = useState<PieceType | null>(null);
+
+  useEffect(() => {
+    console.log(draggedPiece);
+  }, [draggedPiece]);
 
   useEffect(() => game.observe(setPieces), [game, draggedPiece]);
 
@@ -27,12 +32,7 @@ export const Board = ({ game }: BoardProps) => {
         game={game}
         pieceType={draggedPiece}
       >
-        {currentPiece && (
-          <BoardPiece
-            type={currentPiece.type}
-            setDraggedPiece={(piece) => setDraggedPiece(piece)}
-          />
-        )}
+        {currentPiece && <BoardPiece type={currentPiece.type} />}
       </BoardSquare>
     );
   }
@@ -45,20 +45,41 @@ export const Board = ({ game }: BoardProps) => {
     }
   }
 
+  function handleDragStart(event: any) {
+    setDraggedPiece(event.active.id);
+
+    console.log(event);
+  }
+
+  function handleDragEnd(event: any) {
+    const { over } = event;
+
+    console.log(event);
+    draggedPiece &&
+      game.movePiece(
+        draggedPiece,
+        over.data.current.row,
+        over.data.current.col
+      );
+    setDraggedPiece(null);
+  }
+
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(8, 1fr)',
-        gridTemplateRows: 'repeat(8, 1fr)',
-        width: '100%',
-        maxWidth: '100svh',
-        margin: 'auto',
-        aspectRatio: '1 / 1',
-        border: '4px solid #333',
-      }}
-    >
-      {squares}
-    </div>
+    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(8, 1fr)',
+          gridTemplateRows: 'repeat(8, 1fr)',
+          width: '100%',
+          maxWidth: '100svh',
+          margin: 'auto',
+          aspectRatio: '1 / 1',
+          border: '4px solid #333',
+        }}
+      >
+        {squares}
+      </div>
+    </DndContext>
   );
 };

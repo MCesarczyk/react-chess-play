@@ -52,7 +52,7 @@ export const findPiece = (type: PieceType): PieceData => pieces[type];
 
 interface BoardPieceProps {
   type: PieceType;
-  setDraggedPiece: (pieceType: PieceType) => void;
+  setDraggedPiece?: (pieceType: PieceType) => void;
 }
 
 export const BoardPiece = ({ type, setDraggedPiece }: BoardPieceProps) => {

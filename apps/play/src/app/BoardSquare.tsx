@@ -1,4 +1,4 @@
-import { useDrop } from 'react-dnd';
+import { useDroppable } from '@dnd-kit/core';
 import { Square } from './Square';
 import { Game } from './Game';
 import { PieceType } from './types';
@@ -62,25 +62,17 @@ export const BoardSquare = ({
     // return piece.canMovePiece(from, [row, col]);
   };
 
-  const [{ isOver, canDrop }, drop] = useDrop(
-    () => ({
-      accept: [PieceType.KNIGHT, PieceType.PAWN, PieceType.KING],
-      drop: movePiece,
-      canDrop: canMovePiece,
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-        canDrop: !!monitor.canDrop(),
-      }),
-    }),
-    [game, pieceType, row, col, movePiece, canMovePiece]
-  );
+  const { isOver, setNodeRef } = useDroppable({
+    id: `square-${row}-${col}`,
+    data: { row, col },
+  });
 
   return (
     <Square
-      ref={drop}
+      ref={setNodeRef}
       isDark={isDark}
-      isAllowed={canDrop}
-      isForbidden={isOver && !canDrop}
+      isAllowed={canMovePiece()}
+      isForbidden={isOver}
     >
       {children}
     </Square>
