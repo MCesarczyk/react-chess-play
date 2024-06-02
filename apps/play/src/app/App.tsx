@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Game } from '../Game';
+import { Game } from './Game';
 import { Board } from './Board';
 
 export const App = () => {

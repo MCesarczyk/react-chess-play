@@ -1,36 +1,53 @@
-import { useDrop } from 'react-dnd';
+import { useDroppable } from '@dnd-kit/core';
 import { Square } from './Square';
-import { Game } from '../Game';
+import { Game } from './Game';
+import { PieceType } from './types';
+import { findPiece } from './BoardPiece';
 
 interface BoardSquareProps {
   row: number;
   col: number;
   children: React.ReactNode;
   game: Game;
+  pieceType: PieceType | undefined;
 }
 
-export const BoardSquare = ({ row, col, children, game }: BoardSquareProps) => {
+export const BoardSquare = ({
+  row,
+  col,
+  children,
+  game,
+  pieceType,
+}: BoardSquareProps) => {
   const isDark = (row + col) % 2 === 1;
 
-  const [{ isOver, canDrop }, drop] = useDrop(
-    () => ({
-      accept: 'knight',
-      drop: () => game.moveKnight(row, col),
-      canDrop: () => game.canMoveKnight(row, col),
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-        canDrop: !!monitor.canDrop(),
-      }),
-    }),
-    [game]
-  );
+  const canMovePiece = () => {
+    if (!pieceType) {
+      return false;
+    }
+
+    const from = game.locatePiece(pieceType);
+
+    const piece = findPiece(pieceType);
+
+    if (!from || !piece.canMovePiece) {
+      return false;
+    }
+
+    return piece.canMovePiece(from, [row, col]);
+  };
+
+  const { isOver, setNodeRef } = useDroppable({
+    id: `square-${row}-${col}`,
+    data: { row, col },
+  });
 
   return (
     <Square
-      ref={drop}
+      ref={setNodeRef}
       isDark={isDark}
-      isAllowed={canDrop}
-      isForbidden={isOver && !canDrop}
+      isAllowed={canMovePiece()}
+      isForbidden={isOver}
     >
       {children}
     </Square>
