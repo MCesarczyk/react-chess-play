@@ -2,20 +2,28 @@ import { useDrag } from 'react-dnd';
 import clsx from 'clsx';
 
 import { PieceType } from './types';
+import { useEffect } from 'react';
 
 interface PieceProps {
   type: PieceType;
   image: string;
   alt: string;
+  setDraggedPiece: (pieceType: PieceType) => void;
 }
 
-export function Piece({ type, image, alt }: PieceProps) {
+export function Piece({ type, image, alt, setDraggedPiece }: PieceProps) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
+
+  useEffect(() => {
+    if (isDragging) {
+      setDraggedPiece(type);
+    }
+  }, [isDragging, setDraggedPiece, type]);
 
   return (
     <img

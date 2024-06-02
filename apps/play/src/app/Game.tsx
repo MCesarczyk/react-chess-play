@@ -9,6 +9,8 @@ export class Game {
     { type: PieceType.KING, location: [4, 4] },
   ];
 
+  public draggedPiece: PieceType | null = null;
+
   private observers: Observer[] = [];
 
   private emitChange() {
@@ -43,21 +45,24 @@ export class Game {
     return this.pieces.find((p) => p.type === pieceType);
   }
 
-  public canMovePiece(pieceType: PieceType, toX: number, toY: number) {
+  public locatePiece(pieceType: PieceType): Coord | undefined {
     const currentPiece = this.foundPiece(pieceType);
     if (!currentPiece) {
-      return false;
+      return;
     }
 
-    const [x, y] = currentPiece.location;
-    const dx = toX - x;
-    const dy = toY - y;
-
-    return (
-      (Math.abs(dx) === 2 && Math.abs(dy) === 1) ||
-      (Math.abs(dx) === 1 && Math.abs(dy) === 2)
-    );
+    return currentPiece.location;
   }
+
+  // public canMovePiece(from: Coord, to: Coord) {
+  //   const dx = to[0] - from[0];
+  //   const dy = to[1] - from[1];
+
+  //   return (
+  //     (Math.abs(dx) === 2 && Math.abs(dy) === 1) ||
+  //     (Math.abs(dx) === 1 && Math.abs(dy) === 2)
+  //   );
+  // }
 
   public isEqualCoord(c1: Coord | undefined, c2: Coord | undefined): boolean {
     if (!c1 || !c2) {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Game } from './Game';
-import { PieceRecord } from './types';
+import { PieceRecord, PieceType } from './types';
 import { BoardSquare } from './BoardSquare';
 import { BoardPiece } from './BoardPiece';
 
@@ -10,8 +10,9 @@ interface BoardProps {
 
 export const Board = ({ game }: BoardProps) => {
   const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
+  const [draggedPiece, setDraggedPiece] = useState<PieceType | null>(null);
 
-  useEffect(() => game.observe(setPieces), [game]);
+  useEffect(() => game.observe(setPieces), [game, draggedPiece]);
 
   function renderSquare(row: number, col: number) {
     const currentPiece = pieces.find((p) =>
@@ -19,8 +20,19 @@ export const Board = ({ game }: BoardProps) => {
     );
 
     return (
-      <BoardSquare key={`${row}-${col}`} row={row} col={col} game={game}>
-        {currentPiece && <BoardPiece type={currentPiece.type} />}
+      <BoardSquare
+        key={`${row}-${col}`}
+        row={row}
+        col={col}
+        game={game}
+        pieceType={draggedPiece}
+      >
+        {currentPiece && (
+          <BoardPiece
+            type={currentPiece.type}
+            setDraggedPiece={(piece) => setDraggedPiece(piece)}
+          />
+        )}
       </BoardSquare>
     );
   }
