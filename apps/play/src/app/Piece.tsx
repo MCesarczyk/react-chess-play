@@ -1,17 +1,11 @@
 import { useDraggable } from '@dnd-kit/core';
 import clsx from 'clsx';
-import { PieceType } from './types';
+import { PieceData } from './types';
 
-interface PieceProps {
-  type: PieceType;
-  image: string;
-  alt: string;
-}
-
-export function Piece({ type, image, alt }: PieceProps) {
+export function Piece({ type, image, alt, canMovePiece }: PieceData) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: type,
-    data: { piece: { type, image, alt } },
+    data: { piece: { type, image, alt, canMovePiece } },
   });
 
   return (
@@ -26,6 +20,7 @@ export function Piece({ type, image, alt }: PieceProps) {
       src={image}
       alt={alt}
       draggable="false"
+      touch-action="manipulation"
       {...attributes}
       {...listeners}
     />

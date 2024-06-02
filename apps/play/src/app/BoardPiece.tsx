@@ -53,6 +53,11 @@ interface BoardPieceProps {
 
 export const BoardPiece = ({ type }: BoardPieceProps) => {
   return (
-    <Piece type={type} image={pieces[type].image} alt={pieces[type].alt} />
+    <Piece
+      type={type}
+      image={pieces[type].image}
+      alt={pieces[type].alt}
+      canMovePiece={pieces[type].canMovePiece}
+    />
   );
 };
