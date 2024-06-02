@@ -34,24 +34,7 @@ export const BoardSquare = ({
       return false;
     }
 
-    const dx = row - from[0];
-    const dy = col - from[1];
-
-    if (pieceType === PieceType.KNIGHT) {
-      return (
-        (Math.abs(dx) === 2 && Math.abs(dy) === 1) ||
-        (Math.abs(dx) === 1 && Math.abs(dy) === 2)
-      );
-    } else if (pieceType === PieceType.PAWN) {
-      const isFirstMove = from[1] === 2 || from[1] === 7;
-
-      return Math.abs(dy) === 0 && dx === (isFirstMove ? -2 : -1);
-    } else if (pieceType === PieceType.KING) {
-      return Math.abs(dx) <= 1 && Math.abs(dy) <= 1 && (dx !== 0 || dy !== 0);
-    }
-
-    return false;
-    // return piece.canMovePiece(from, [row, col]);
+    return piece.canMovePiece(from, [row, col]);
   };
 
   const { isOver, setNodeRef } = useDroppable({

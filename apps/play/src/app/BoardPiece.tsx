@@ -22,11 +22,11 @@ const pieces = {
     image: pawn,
     alt: 'Pawn',
     canMovePiece: (from: Coord, to: Coord) => {
-      const dx = to[0] - from[0];
-      const dy = to[1] - from[1];
-      const isFirstMove = from[1] === 2 || from[1] === 7;
+      const dx = to[1] - from[1];
+      const dy = to[0] - from[0];
+      const isFirstMove = from[0] === 6;
 
-      return Math.abs(dx) === 0 && Math.abs(dy) === (isFirstMove ? 2 : 1);
+      return Math.abs(dx) === 0 && dy >= (isFirstMove ? -2 : -1) && dy < 0;
     },
   },
   [PieceType.KNIGHT]: {

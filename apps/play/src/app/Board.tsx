@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { Game } from './Game';
-import { PieceData, PieceRecord } from './types';
+import { Coord, PieceData, PieceRecord, PieceType } from './types';
 import { BoardSquare } from './BoardSquare';
-import { BoardPiece } from './BoardPiece';
+import { BoardPiece, findPiece } from './BoardPiece';
 import { Piece } from './Piece';
 
 interface BoardProps {
@@ -48,20 +48,28 @@ export const Board = ({ game }: BoardProps) => {
 
   function handleDragStart(event: any) {
     setDraggedPiece(event.active.data.current.piece);
-
-    console.log(event);
   }
+
+  const canMovePiece = (pieceType: PieceType, destination: Coord) => {
+    const from = game.locatePiece(pieceType);
+
+    const piece = findPiece(pieceType);
+
+    if (!from || !piece.canMovePiece) {
+      return false;
+    }
+
+    return piece.canMovePiece(from, destination);
+  };
 
   function handleDragEnd(event: any) {
     const { over } = event;
 
-    console.log(event);
+    const destination = over.data.current;
+
     draggedPiece &&
-      game.movePiece(
-        draggedPiece.type,
-        over.data.current.row,
-        over.data.current.col
-      );
+      canMovePiece(draggedPiece.type, [destination.row, destination.col]) &&
+      game.movePiece(draggedPiece.type, destination.row, destination.col);
     setDraggedPiece(null);
   }
 

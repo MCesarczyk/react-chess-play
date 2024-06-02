@@ -5,7 +5,7 @@ type Observer = ((pieces: PieceRecord[]) => void) | null;
 export class Game {
   public pieces: PieceRecord[] = [
     { type: PieceType.KNIGHT, location: [3, 2] },
-    { type: PieceType.PAWN, location: [1, 6] },
+    { type: PieceType.PAWN, location: [6, 6] },
     { type: PieceType.KING, location: [4, 4] },
   ];
 
