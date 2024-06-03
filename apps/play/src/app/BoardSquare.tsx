@@ -2,7 +2,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { Square } from './Square';
 import { Game } from './Game';
 import { PieceType } from './piece/types';
-import { findPiece } from './piece/BoardPiece';
+import { findPieceMove } from './piece/availableMoves';
 
 interface BoardSquareProps {
   row: number;
@@ -30,13 +30,13 @@ export const BoardSquare = ({
 
     const from = game.locatePiece(pieceId);
 
-    const piece = findPiece(pieceType);
+    const possibleMove = findPieceMove(pieceType);
 
-    if (!from || !piece.canMovePiece) {
+    if (!from || !possibleMove) {
       return false;
     }
 
-    return piece.canMovePiece(from, [row, col]);
+    return possibleMove(from, [row, col]);
   };
 
   const { isOver, setNodeRef } = useDroppable({

@@ -1,76 +1,11 @@
-import { Coord, PieceRecord } from './types';
-import { PieceType } from './piece/types';
+import { Coord } from './types';
+import { PieceRecord, PieceType } from './piece/types';
+import { initialPieces } from './piece/initialPieces';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
 
 export class Game {
-  public pieces: PieceRecord[] = [
-    {
-      id: 'rook-black-right',
-      type: PieceType.ROOK,
-      colour: 'black',
-      location: [0, 0],
-    },
-    {
-      id: 'bishop-black-right',
-      type: PieceType.BISHOP,
-      colour: 'black',
-      location: [0, 1],
-    },
-    {
-      id: 'knight-black-right',
-      type: PieceType.KNIGHT,
-      colour: 'black',
-      location: [0, 2],
-    },
-    {
-      id: 'queen-black',
-      type: PieceType.QUEEN,
-      colour: 'black',
-      location: [0, 3],
-    },
-    {
-      id: 'king-black',
-      type: PieceType.KING,
-      colour: 'black',
-      location: [0, 4],
-    },
-    {
-      id: 'knight-black-left',
-      type: PieceType.KNIGHT,
-      colour: 'black',
-      location: [0, 5],
-    },
-    {
-      id: 'bishop-black-left',
-      type: PieceType.BISHOP,
-      colour: 'black',
-      location: [0, 6],
-    },
-    {
-      id: 'rook-black-left',
-      type: PieceType.ROOK,
-      colour: 'black',
-      location: [0, 7],
-    },
-    ...Object.values(
-      Array.from({ length: 8 }).map(
-        (_, i) =>
-          ({
-            id: `pawn-black-${i + 1}`,
-            type: PieceType.PAWN_BLACK,
-            colour: 'black',
-            location: [1, i],
-          } as PieceRecord)
-      )
-    ),
-    {
-      id: 'pawn-white-8',
-      type: PieceType.PAWN_WHITE,
-      colour: 'black',
-      location: [6, 0],
-    },
-  ];
+  public pieces: PieceRecord[] = initialPieces;
 
   public draggedPiece: PieceType | null = null;
 

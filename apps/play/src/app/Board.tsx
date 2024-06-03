@@ -12,11 +12,11 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { Game } from './Game';
-import { Coord, PieceRecord } from './types';
+import { Coord } from './types';
 import { BoardSquare } from './BoardSquare';
-import { findPiece } from './piece/BoardPiece';
 import { Piece } from './piece/Piece';
-import { PieceItem, PieceType } from './piece/types';
+import { PieceItem, PieceRecord, PieceType } from './piece/types';
+import { findPieceMove } from './piece/availableMoves';
 
 interface BoardProps {
   game: Game;
@@ -49,7 +49,7 @@ export const Board = ({ game }: BoardProps) => {
         pieceId={draggedPiece?.id}
       >
         {currentPiece && (
-          <Piece {...currentPiece} {...findPiece(currentPiece.type)} />
+          <Piece {...currentPiece} {...findPieceMove(currentPiece.type)} />
         )}
       </BoardSquare>
     );
@@ -75,13 +75,13 @@ export const Board = ({ game }: BoardProps) => {
   ) => {
     const from = game.locatePiece(pieceId);
 
-    const piece = findPiece(pieceType);
+    const possibleMove = findPieceMove(pieceType);
 
-    if (!from || !piece.canMovePiece) {
+    if (!from || !possibleMove) {
       return false;
     }
 
-    return piece.canMovePiece(from, destination);
+    return possibleMove(from, destination);
   };
 
   function handleDragEnd(event: DragEndEvent) {

@@ -10,16 +10,22 @@ export enum PieceType {
   PAWN_WHITE = 'pawn_white',
 }
 
-export interface PieceData {
+export type PieceMove = (from: Coord, to: Coord) => boolean;
+
+export enum PieceColour {
+  BLACK = 'black',
+  WHITE = 'white',
+};
+
+export interface PieceRecord {
+  id: string;
   type: PieceType;
+  colour: PieceColour;
   image: string;
   alt: string;
-  canMovePiece: (from: Coord, to: Coord) => boolean;
+  location: Coord;
 }
 
-export type PieceColour = 'white' | 'black';
-
-export interface PieceItem extends PieceData {
-  id: string;
-  colour: PieceColour;
+export interface PieceItem extends PieceRecord {
+  canMovePiece: PieceMove;
 }
