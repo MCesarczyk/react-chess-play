@@ -54,16 +54,6 @@ export class Game {
     return currentPiece.location;
   }
 
-  // public canMovePiece(from: Coord, to: Coord) {
-  //   const dx = to[0] - from[0];
-  //   const dy = to[1] - from[1];
-
-  //   return (
-  //     (Math.abs(dx) === 2 && Math.abs(dy) === 1) ||
-  //     (Math.abs(dx) === 1 && Math.abs(dy) === 2)
-  //   );
-  // }
-
   public isEqualCoord(c1: Coord | undefined, c2: Coord | undefined): boolean {
     if (!c1 || !c2) {
       return false;

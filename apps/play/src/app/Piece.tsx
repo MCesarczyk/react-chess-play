@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { useDraggable } from '@dnd-kit/core';
-import clsx from 'clsx';
 import { PieceData } from './types';
 
 export function Piece({ type, image, alt, canMovePiece }: PieceData) {
@@ -9,20 +9,31 @@ export function Piece({ type, image, alt, canMovePiece }: PieceData) {
   });
 
   return (
-    <img
+    <PieceImage
       ref={setNodeRef}
-      className={clsx(
-        'w-3/4 aspect-square p-1 rounded-lg shadow-xl bg-gray-400 hover:bg-gray-600',
-        isDragging && 'opacity-50 bg-opacity-50 border-1'
-      )}
+      $faded={isDragging}
       height="80%"
       width="80%"
       src={image}
       alt={alt}
       draggable="false"
-      touch-action="manipulation"
       {...attributes}
       {...listeners}
     />
   );
 }
+
+const PieceImage = styled.img<{ $faded?: boolean }>`
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  box-shadow: 0 0 0.5rem 0.25rem #000;
+  background-color: #ccc;
+  touch-action: manipulation;
+
+  &:hover {
+    background-color: #aaa;
+  }
+
+  ${({ $faded }) => $faded && 'opacity: 0.5;'}
+`;

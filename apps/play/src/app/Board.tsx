@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
 import {
   DndContext,
   DragOverlay,
@@ -78,8 +79,6 @@ export const Board = ({ game }: BoardProps) => {
   function handleDragEnd(event: DragEndEvent) {
     const { over } = event;
 
-    console.log('dragend', event);
-
     const destination = over?.data.current;
 
     draggedPiece &&
@@ -95,22 +94,9 @@ export const Board = ({ game }: BoardProps) => {
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(8, 1fr)',
-          gridTemplateRows: 'repeat(8, 1fr)',
-          width: '100%',
-          maxWidth: '100svh',
-          margin: 'auto',
-          aspectRatio: '1 / 1',
-          border: '4px solid #333',
-        }}
-      >
-        {squares}
-      </div>
+      <BoardWrapper>{squares}</BoardWrapper>
 
-      <DragOverlay>
+      <DragOverlay adjustScale={true}>
         {draggedPiece ? (
           <Piece
             type={draggedPiece.type}
@@ -123,3 +109,14 @@ export const Board = ({ game }: BoardProps) => {
     </DndContext>
   );
 };
+
+const BoardWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 100%;
+  max-width: 100svh;
+  margin: auto;
+  aspect-ratio: 1 / 1;
+  border: 4px solid #333;
+`;

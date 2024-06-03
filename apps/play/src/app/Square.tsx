@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { ForwardedRef, forwardRef } from 'react';
 
 interface SquareProps {
@@ -22,20 +23,19 @@ export const Square = forwardRef(
     }
 
     return (
-      <div
-        ref={ref}
-        style={{
-          width: '100%',
-          height: '100%',
-          aspectRatio: '1 / 1',
-          display: 'grid',
-          placeItems: 'center',
-          backgroundColor: bgColor,
-          border: '1px solid #000',
-        }}
-      >
+      <SquareWrapper $bg={bgColor} ref={ref}>
         {children}
-      </div>
+      </SquareWrapper>
     );
   }
 );
+
+const SquareWrapper = styled.div<{ $bg: string }>`
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid #000;
+  background-color: ${({ $bg }) => $bg};
+`;
