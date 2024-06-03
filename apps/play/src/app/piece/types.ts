@@ -1,9 +1,12 @@
 import { Coord } from "../types";
 
 export enum PieceType {
+  KING = 'king',
+  QUEEN = 'queen',
+  ROOK = 'rook',
+  BISHOP = 'bishop',
   KNIGHT = 'knight',
   PAWN = 'pawn',
-  KING = 'king',
 }
 
 export interface PieceData {
