@@ -1,4 +1,5 @@
-import { Coord, PieceRecord, PieceType } from './types';
+import { Coord, PieceRecord } from './types';
+import { PieceType } from './piece/types';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
 

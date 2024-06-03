@@ -12,10 +12,11 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { Game } from './Game';
-import { Coord, PieceData, PieceRecord, PieceType } from './types';
+import { Coord, PieceRecord } from './types';
 import { BoardSquare } from './BoardSquare';
-import { BoardPiece, findPiece } from './BoardPiece';
-import { Piece } from './Piece';
+import { BoardPiece, findPiece } from './piece/BoardPiece';
+import { Piece } from './piece/Piece';
+import { PieceData, PieceType } from './piece/types';
 
 interface BoardProps {
   game: Game;

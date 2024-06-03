@@ -1,8 +1,8 @@
-import { Coord, PieceData, PieceType } from './types';
-
-import king from '../assets/king.png';
-import pawn from '../assets/pawn.png';
-import knight from '../assets/knight_b.png';
+import { Coord } from '../types';
+import { PieceData, PieceType } from './types';
+import king from './assets/king.png';
+import pawn from './assets/pawn.png';
+import knight from './assets/knight_b.png';
 import { Piece } from './Piece';
 
 const pieces = {

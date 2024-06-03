@@ -1,8 +1,8 @@
 import { useDroppable } from '@dnd-kit/core';
 import { Square } from './Square';
 import { Game } from './Game';
-import { PieceType } from './types';
-import { findPiece } from './BoardPiece';
+import { PieceType } from './piece/types';
+import { findPiece } from './piece/BoardPiece';
 
 interface BoardSquareProps {
   row: number;
