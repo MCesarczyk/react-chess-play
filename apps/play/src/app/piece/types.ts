@@ -16,3 +16,10 @@ export interface PieceData {
   alt: string;
   canMovePiece: (from: Coord, to: Coord) => boolean;
 }
+
+export type PieceColour = 'white' | 'black';
+
+export interface PieceItem extends PieceData {
+  id: string;
+  colour: PieceColour;
+}

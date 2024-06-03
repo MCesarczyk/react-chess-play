@@ -10,6 +10,7 @@ interface BoardSquareProps {
   children: React.ReactNode;
   game: Game;
   pieceType: PieceType | undefined;
+  pieceId: string | undefined;
 }
 
 export const BoardSquare = ({
@@ -18,15 +19,16 @@ export const BoardSquare = ({
   children,
   game,
   pieceType,
+  pieceId,
 }: BoardSquareProps) => {
   const isDark = (row + col) % 2 === 1;
 
   const canMovePiece = () => {
-    if (!pieceType) {
+    if (!pieceType || !pieceId) {
       return false;
     }
 
-    const from = game.locatePiece(pieceType);
+    const from = game.locatePiece(pieceId);
 
     const piece = findPiece(pieceType);
 

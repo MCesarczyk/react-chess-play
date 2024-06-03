@@ -14,9 +14,9 @@ import {
 import { Game } from './Game';
 import { Coord, PieceRecord } from './types';
 import { BoardSquare } from './BoardSquare';
-import { BoardPiece, findPiece } from './piece/BoardPiece';
+import { findPiece } from './piece/BoardPiece';
 import { Piece } from './piece/Piece';
-import { PieceData, PieceType } from './piece/types';
+import { PieceItem, PieceType } from './piece/types';
 
 interface BoardProps {
   game: Game;
@@ -30,7 +30,7 @@ export const Board = ({ game }: BoardProps) => {
   );
 
   const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
-  const [draggedPiece, setDraggedPiece] = useState<PieceData | null>(null);
+  const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
 
   useEffect(() => game.observe(setPieces), [game, draggedPiece]);
 
@@ -46,8 +46,11 @@ export const Board = ({ game }: BoardProps) => {
         col={col}
         game={game}
         pieceType={draggedPiece?.type}
+        pieceId={draggedPiece?.id}
       >
-        {currentPiece && <BoardPiece type={currentPiece.type} />}
+        {currentPiece && (
+          <Piece {...currentPiece} {...findPiece(currentPiece.type)} />
+        )}
       </BoardSquare>
     );
   }
@@ -65,8 +68,12 @@ export const Board = ({ game }: BoardProps) => {
     currentEvent && setDraggedPiece(currentEvent.piece);
   }
 
-  const canMovePiece = (pieceType: PieceType, destination: Coord) => {
-    const from = game.locatePiece(pieceType);
+  const canMovePiece = (
+    pieceId: string,
+    pieceType: PieceType,
+    destination: Coord
+  ) => {
+    const from = game.locatePiece(pieceId);
 
     const piece = findPiece(pieceType);
 
@@ -84,8 +91,11 @@ export const Board = ({ game }: BoardProps) => {
 
     draggedPiece &&
       destination &&
-      canMovePiece(draggedPiece.type, [destination.row, destination.col]) &&
-      game.movePiece(draggedPiece.type, destination.row, destination.col);
+      canMovePiece(draggedPiece.id, draggedPiece.type, [
+        destination.row,
+        destination.col,
+      ]) &&
+      game.movePiece(draggedPiece.id, destination.row, destination.col);
     setDraggedPiece(null);
   }
 
@@ -98,14 +108,7 @@ export const Board = ({ game }: BoardProps) => {
       <BoardWrapper>{squares}</BoardWrapper>
 
       <DragOverlay adjustScale={true}>
-        {draggedPiece ? (
-          <Piece
-            type={draggedPiece.type}
-            alt={draggedPiece.alt}
-            image={draggedPiece.image}
-            canMovePiece={() => false}
-          />
-        ) : null}
+        {draggedPiece ? <Piece {...draggedPiece} id="dragged-piece" /> : null}
       </DragOverlay>
     </DndContext>
   );

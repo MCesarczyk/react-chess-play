@@ -8,7 +8,7 @@ import knightBlack from './assets/knight_b.png';
 import pawnBlack from './assets/pawn_b.png';
 import pawnWhite from './assets/pawn_w.png';
 
-export const pieces = {
+export const availablePieces = {
   [PieceType.KING]: {
     type: PieceType.KING,
     image: kingBlack,

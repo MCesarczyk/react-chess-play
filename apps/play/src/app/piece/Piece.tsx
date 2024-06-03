@@ -1,11 +1,23 @@
 import styled from '@emotion/styled';
 import { useDraggable } from '@dnd-kit/core';
-import { PieceData } from './types';
+import { PieceItem } from './types';
 
-export function Piece({ type, image, alt, canMovePiece }: PieceData) {
+// interface PieceProps extends PieceData {
+//   // id: string;
+//   // colour: 'white' | 'black';
+// }
+
+export function Piece({
+  type,
+  colour,
+  id,
+  image,
+  alt,
+  canMovePiece,
+}: PieceItem) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: type,
-    data: { piece: { type, image, alt, canMovePiece } },
+    id: `${type}-${colour}-${id}`,
+    data: { piece: { type, colour, id, image, alt, canMovePiece } },
   });
 
   return (

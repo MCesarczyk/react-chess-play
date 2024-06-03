@@ -1,20 +1,24 @@
-import { PieceData, PieceType } from './types';
+import { PieceColour, PieceData, PieceType } from './types';
 import { Piece } from './Piece';
-import { pieces } from './pieces';
+import { availablePieces } from './pieces';
 
-export const findPiece = (type: PieceType): PieceData => pieces[type];
+export const findPiece = (type: PieceType): PieceData => availablePieces[type];
 
 interface BoardPieceProps {
   type: PieceType;
+  colour: PieceColour;
+  id: string;
 }
 
-export const BoardPiece = ({ type }: BoardPieceProps) => {
+export const BoardPiece = ({ type, colour, id }: BoardPieceProps) => {
   return (
     <Piece
       type={type}
-      image={pieces[type].image}
-      alt={pieces[type].alt}
-      canMovePiece={pieces[type].canMovePiece}
+      colour={colour}
+      id={id}
+      image={availablePieces[type].image}
+      alt={availablePieces[type].alt}
+      canMovePiece={availablePieces[type].canMovePiece}
     />
   );
 };

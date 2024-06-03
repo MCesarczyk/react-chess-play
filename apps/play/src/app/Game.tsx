@@ -5,13 +5,71 @@ type Observer = ((pieces: PieceRecord[]) => void) | null;
 
 export class Game {
   public pieces: PieceRecord[] = [
-    { type: PieceType.KING, location: [0, 4] },
-    { type: PieceType.QUEEN, location: [0, 3] },
-    { type: PieceType.ROOK, location: [0, 0] },
-    { type: PieceType.BISHOP, location: [0, 1] },
-    { type: PieceType.KNIGHT, location: [0, 2] },
-    { type: PieceType.PAWN_BLACK, location: [1, 0] },
-    { type: PieceType.PAWN_WHITE, location: [6, 0] },
+    {
+      id: 'rook-black-right',
+      type: PieceType.ROOK,
+      colour: 'black',
+      location: [0, 0],
+    },
+    {
+      id: 'bishop-black-right',
+      type: PieceType.BISHOP,
+      colour: 'black',
+      location: [0, 1],
+    },
+    {
+      id: 'knight-black-right',
+      type: PieceType.KNIGHT,
+      colour: 'black',
+      location: [0, 2],
+    },
+    {
+      id: 'queen-black',
+      type: PieceType.QUEEN,
+      colour: 'black',
+      location: [0, 3],
+    },
+    {
+      id: 'king-black',
+      type: PieceType.KING,
+      colour: 'black',
+      location: [0, 4],
+    },
+    {
+      id: 'knight-black-left',
+      type: PieceType.KNIGHT,
+      colour: 'black',
+      location: [0, 5],
+    },
+    {
+      id: 'bishop-black-left',
+      type: PieceType.BISHOP,
+      colour: 'black',
+      location: [0, 6],
+    },
+    {
+      id: 'rook-black-left',
+      type: PieceType.ROOK,
+      colour: 'black',
+      location: [0, 7],
+    },
+    ...Object.values(
+      Array.from({ length: 8 }).map(
+        (_, i) =>
+          ({
+            id: `pawn-black-${i + 1}`,
+            type: PieceType.PAWN_BLACK,
+            colour: 'black',
+            location: [1, i],
+          } as PieceRecord)
+      )
+    ),
+    {
+      id: 'pawn-white-8',
+      type: PieceType.PAWN_WHITE,
+      colour: 'black',
+      location: [6, 0],
+    },
   ];
 
   public draggedPiece: PieceType | null = null;
@@ -32,9 +90,9 @@ export class Game {
     };
   }
 
-  public movePiece(pieceType: PieceType, toX: number, toY: number) {
+  public movePiece(pieceId: string, toX: number, toY: number) {
     const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
-      if (p.type === pieceType) {
+      if (p.id === pieceId) {
         return { ...p, location: [toX, toY] };
       }
 
@@ -46,12 +104,12 @@ export class Game {
     this.emitChange();
   }
 
-  private foundPiece(pieceType: PieceType): PieceRecord | undefined {
-    return this.pieces.find((p) => p.type === pieceType);
+  private findPiece(pieceId: string): PieceRecord | undefined {
+    return this.pieces.find((p) => p.id === pieceId);
   }
 
-  public locatePiece(pieceType: PieceType): Coord | undefined {
-    const currentPiece = this.foundPiece(pieceType);
+  public locatePiece(pieceId: string): Coord | undefined {
+    const currentPiece = this.findPiece(pieceId);
     if (!currentPiece) {
       return;
     }
