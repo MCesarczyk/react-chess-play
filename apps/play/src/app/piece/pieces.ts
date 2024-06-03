@@ -6,6 +6,7 @@ import rookBlack from './assets/rook_b.png';
 import bishopBlack from './assets/bishop_b.png';
 import knightBlack from './assets/knight_b.png';
 import pawnBlack from './assets/pawn_b.png';
+import pawnWhite from './assets/pawn_w.png';
 
 export const pieces = {
   [PieceType.KING]: {
@@ -70,8 +71,8 @@ export const pieces = {
       );
     },
   },
-  [PieceType.PAWN]: {
-    type: PieceType.PAWN,
+  [PieceType.PAWN_BLACK]: {
+    type: PieceType.PAWN_BLACK,
     image: pawnBlack,
     alt: 'Pawn',
     canMovePiece: (from: Coord, to: Coord) => {
@@ -80,6 +81,18 @@ export const pieces = {
       const isFirstMove = from[0] === 1;
 
       return Math.abs(dx) === 0 && dy <= (isFirstMove ? 2 : 1) && dy > 0;
+    },
+  },
+  [PieceType.PAWN_WHITE]: {
+    type: PieceType.PAWN_WHITE,
+    image: pawnWhite,
+    alt: 'Pawn',
+    canMovePiece: (from: Coord, to: Coord) => {
+      const dx = to[1] - from[1];
+      const dy = to[0] - from[0];
+      const isFirstMove = from[0] === 6;
+
+      return Math.abs(dx) === 0 && dy >= (isFirstMove ? -2 : -1) && dy < 0;
     },
   },
 };

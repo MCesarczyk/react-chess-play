@@ -6,7 +6,8 @@ export enum PieceType {
   ROOK = 'rook',
   BISHOP = 'bishop',
   KNIGHT = 'knight',
-  PAWN = 'pawn',
+  PAWN_BLACK = 'pawn_black',
+  PAWN_WHITE = 'pawn_white',
 }
 
 export interface PieceData {

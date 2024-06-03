@@ -10,7 +10,8 @@ export class Game {
     { type: PieceType.ROOK, location: [0, 0] },
     { type: PieceType.BISHOP, location: [0, 1] },
     { type: PieceType.KNIGHT, location: [0, 2] },
-    { type: PieceType.PAWN, location: [1, 0] },
+    { type: PieceType.PAWN_BLACK, location: [1, 0] },
+    { type: PieceType.PAWN_WHITE, location: [6, 0] },
   ];
 
   public draggedPiece: PieceType | null = null;
