@@ -33,8 +33,6 @@ export const Square = forwardRef(
 const SquareWrapper = styled.div<{ $bg: string }>`
   display: grid;
   place-items: center;
-  width: 100%;
-  height: 100%;
   aspect-ratio: 1 / 1;
   border: 1px solid #000;
   background-color: ${({ $bg }) => $bg};
