@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
 import {
   DndContext,
   DragOverlay,
@@ -11,10 +12,11 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { Game } from './Game';
-import { Coord, PieceData, PieceRecord, PieceType } from './types';
+import { Coord } from './types';
 import { BoardSquare } from './BoardSquare';
-import { BoardPiece, findPiece } from './BoardPiece';
-import { Piece } from './Piece';
+import { Piece } from './piece/Piece';
+import { PieceItem, PieceRecord, PieceType } from './piece/types';
+import { findPieceMove } from './piece/availableMoves';
 
 interface BoardProps {
   game: Game;
@@ -28,7 +30,7 @@ export const Board = ({ game }: BoardProps) => {
   );
 
   const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
-  const [draggedPiece, setDraggedPiece] = useState<PieceData | null>(null);
+  const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
 
   useEffect(() => game.observe(setPieces), [game, draggedPiece]);
 
@@ -44,8 +46,11 @@ export const Board = ({ game }: BoardProps) => {
         col={col}
         game={game}
         pieceType={draggedPiece?.type}
+        pieceId={draggedPiece?.id}
       >
-        {currentPiece && <BoardPiece type={currentPiece.type} />}
+        {currentPiece && (
+          <Piece {...currentPiece} {...findPieceMove(currentPiece.type)} />
+        )}
       </BoardSquare>
     );
   }
@@ -63,29 +68,34 @@ export const Board = ({ game }: BoardProps) => {
     currentEvent && setDraggedPiece(currentEvent.piece);
   }
 
-  const canMovePiece = (pieceType: PieceType, destination: Coord) => {
-    const from = game.locatePiece(pieceType);
+  const canMovePiece = (
+    pieceId: string,
+    pieceType: PieceType,
+    destination: Coord
+  ) => {
+    const from = game.locatePiece(pieceId);
 
-    const piece = findPiece(pieceType);
+    const possibleMove = findPieceMove(pieceType);
 
-    if (!from || !piece.canMovePiece) {
+    if (!from || !possibleMove) {
       return false;
     }
 
-    return piece.canMovePiece(from, destination);
+    return possibleMove(from, destination);
   };
 
   function handleDragEnd(event: DragEndEvent) {
     const { over } = event;
 
-    console.log('dragend', event);
-
     const destination = over?.data.current;
 
     draggedPiece &&
       destination &&
-      canMovePiece(draggedPiece.type, [destination.row, destination.col]) &&
-      game.movePiece(draggedPiece.type, destination.row, destination.col);
+      canMovePiece(draggedPiece.id, draggedPiece.type, [
+        destination.row,
+        destination.col,
+      ]) &&
+      game.movePiece(draggedPiece.id, destination.row, destination.col);
     setDraggedPiece(null);
   }
 
@@ -95,31 +105,22 @@ export const Board = ({ game }: BoardProps) => {
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(8, 1fr)',
-          gridTemplateRows: 'repeat(8, 1fr)',
-          width: '100%',
-          maxWidth: '100svh',
-          margin: 'auto',
-          aspectRatio: '1 / 1',
-          border: '4px solid #333',
-        }}
-      >
-        {squares}
-      </div>
+      <BoardWrapper>{squares}</BoardWrapper>
 
-      <DragOverlay>
-        {draggedPiece ? (
-          <Piece
-            type={draggedPiece.type}
-            alt={draggedPiece.alt}
-            image={draggedPiece.image}
-            canMovePiece={() => false}
-          />
-        ) : null}
+      <DragOverlay adjustScale={true}>
+        {draggedPiece ? <Piece {...draggedPiece} id="dragged-piece" /> : null}
       </DragOverlay>
     </DndContext>
   );
 };
+
+const BoardWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 100%;
+  max-width: 100svh;
+  margin: auto;
+  aspect-ratio: 1 / 1;
+  border: 4px solid #333;
+`;

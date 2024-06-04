@@ -1,8 +1,8 @@
 import { useDroppable } from '@dnd-kit/core';
 import { Square } from './Square';
 import { Game } from './Game';
-import { PieceType } from './types';
-import { findPiece } from './BoardPiece';
+import { PieceType } from './piece/types';
+import { findPieceMove } from './piece/availableMoves';
 
 interface BoardSquareProps {
   row: number;
@@ -10,6 +10,7 @@ interface BoardSquareProps {
   children: React.ReactNode;
   game: Game;
   pieceType: PieceType | undefined;
+  pieceId: string | undefined;
 }
 
 export const BoardSquare = ({
@@ -18,23 +19,24 @@ export const BoardSquare = ({
   children,
   game,
   pieceType,
+  pieceId,
 }: BoardSquareProps) => {
   const isDark = (row + col) % 2 === 1;
 
   const canMovePiece = () => {
-    if (!pieceType) {
+    if (!pieceType || !pieceId) {
       return false;
     }
 
-    const from = game.locatePiece(pieceType);
+    const from = game.locatePiece(pieceId);
 
-    const piece = findPiece(pieceType);
+    const possibleMove = findPieceMove(pieceType);
 
-    if (!from || !piece.canMovePiece) {
+    if (!from || !possibleMove) {
       return false;
     }
 
-    return piece.canMovePiece(from, [row, col]);
+    return possibleMove(from, [row, col]);
   };
 
   const { isOver, setNodeRef } = useDroppable({

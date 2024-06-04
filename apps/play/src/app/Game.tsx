@@ -1,13 +1,11 @@
-import { Coord, PieceRecord, PieceType } from './types';
+import { Coord } from './types';
+import { PieceRecord, PieceType } from './piece/types';
+import { initialPieces } from './piece/initialPieces';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
 
 export class Game {
-  public pieces: PieceRecord[] = [
-    { type: PieceType.KNIGHT, location: [3, 2] },
-    { type: PieceType.PAWN, location: [6, 6] },
-    { type: PieceType.KING, location: [4, 4] },
-  ];
+  public pieces: PieceRecord[] = initialPieces;
 
   public draggedPiece: PieceType | null = null;
 
@@ -27,9 +25,9 @@ export class Game {
     };
   }
 
-  public movePiece(pieceType: PieceType, toX: number, toY: number) {
+  public movePiece(pieceId: string, toX: number, toY: number) {
     const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
-      if (p.type === pieceType) {
+      if (p.id === pieceId) {
         return { ...p, location: [toX, toY] };
       }
 
@@ -41,28 +39,18 @@ export class Game {
     this.emitChange();
   }
 
-  private foundPiece(pieceType: PieceType): PieceRecord | undefined {
-    return this.pieces.find((p) => p.type === pieceType);
+  private findPiece(pieceId: string): PieceRecord | undefined {
+    return this.pieces.find((p) => p.id === pieceId);
   }
 
-  public locatePiece(pieceType: PieceType): Coord | undefined {
-    const currentPiece = this.foundPiece(pieceType);
+  public locatePiece(pieceId: string): Coord | undefined {
+    const currentPiece = this.findPiece(pieceId);
     if (!currentPiece) {
       return;
     }
 
     return currentPiece.location;
   }
-
-  // public canMovePiece(from: Coord, to: Coord) {
-  //   const dx = to[0] - from[0];
-  //   const dy = to[1] - from[1];
-
-  //   return (
-  //     (Math.abs(dx) === 2 && Math.abs(dy) === 1) ||
-  //     (Math.abs(dx) === 1 && Math.abs(dy) === 2)
-  //   );
-  // }
 
   public isEqualCoord(c1: Coord | undefined, c2: Coord | undefined): boolean {
     if (!c1 || !c2) {
