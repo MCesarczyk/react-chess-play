@@ -29,7 +29,7 @@ export const Board = ({ game }: BoardProps) => {
     useSensor(KeyboardSensor)
   );
 
-  const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
+  const [pieces, setPieces] = useState<PieceRecord[]>(game.getPieces());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
 
   useEffect(() => game.observe(setPieces), [game, draggedPiece]);
