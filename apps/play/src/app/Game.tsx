@@ -46,21 +46,114 @@ export class Game {
     return currentPiece.location;
   }
 
-  public canMovePiece = (
-    pieceId: string,
-    pieceMove: PieceMove,
-    destination: Coord
-  ) => {
+  public canMovePiece = (pieceId: string, pieceMove: PieceMove, to: Coord) => {
     const from = this.locatePiece(pieceId);
 
-    const currentPiece = this.findPieceByCoord(destination);
-    const isSquareOccupied = Boolean(currentPiece);
-
-    if (!from || !pieceMove || isSquareOccupied) {
+    if (!from || !pieceMove) {
       return false;
     }
 
-    return pieceMove(from, destination);
+    if (
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[0] === from[0] &&
+          p.location[1] > to[1] &&
+          p.location[1] < from[1]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[0] === from[0] &&
+          p.location[1] < to[1] &&
+          p.location[1] > from[1]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          p.location[1] === to[1] &&
+          p.location[1] === from[1] &&
+          p.location[0] < to[0] &&
+          p.location[0] > from[0]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          p.location[1] === to[1] &&
+          p.location[1] === from[1] &&
+          p.location[0] > to[0] &&
+          p.location[0] < from[0]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          p.location[0] > to[0] &&
+          p.location[0] < from[0] &&
+          p.location[1] > to[1] &&
+          p.location[1] < from[1]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          p.location[0] < to[0] &&
+          p.location[0] > from[0] &&
+          p.location[1] < to[1] &&
+          p.location[1] > from[1]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          p.location[0] < to[0] &&
+          p.location[0] > from[0] &&
+          p.location[1] > to[1] &&
+          p.location[1] < from[1]
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      this.getPieces().some(
+        (p) =>
+          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          p.location[0] > to[0] &&
+          p.location[0] < from[0] &&
+          p.location[1] < to[1] &&
+          p.location[1] > from[1]
+      )
+    ) {
+      return false;
+    }
+
+    return pieceMove(from, to);
   };
 
   public movePiece(pieceId: string, toX: number, toY: number) {
