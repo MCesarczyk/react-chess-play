@@ -1,5 +1,5 @@
 import { Coord } from './types';
-import { PieceRecord } from './piece/types';
+import { PieceMove, PieceRecord } from './piece/types';
 import { initialPieces } from './piece/initialPieces';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
@@ -14,8 +14,14 @@ export class Game {
     this.observers.forEach((observer) => observer && observer(pieces));
   }
 
-  private findPiece(pieceId: string): PieceRecord | undefined {
+  private findPieceById(pieceId: string): PieceRecord | undefined {
     return this.pieces.find((p) => p.id === pieceId);
+  }
+
+  public findPieceByCoord(coord: Coord): PieceRecord | undefined {
+    return this.pieces.find(
+      (p) => p.location[0] === coord[0] && p.location[1] === coord[1]
+    );
   }
 
   public getPieces(): PieceRecord[] {
@@ -32,13 +38,30 @@ export class Game {
   }
 
   public locatePiece(pieceId: string): Coord | undefined {
-    const currentPiece = this.findPiece(pieceId);
+    const currentPiece = this.findPieceById(pieceId);
     if (!currentPiece) {
       return;
     }
 
     return currentPiece.location;
   }
+
+  public canMovePiece = (
+    pieceId: string,
+    pieceMove: PieceMove,
+    destination: Coord
+  ) => {
+    const from = this.locatePiece(pieceId);
+
+    const currentPiece = this.findPieceByCoord(destination);
+    const isSquareOccupied = Boolean(currentPiece);
+
+    if (!from || !pieceMove || isSquareOccupied) {
+      return false;
+    }
+
+    return pieceMove(from, destination);
+  };
 
   public movePiece(pieceId: string, toX: number, toY: number) {
     const updatedPieces: PieceRecord[] = this.pieces.map((p) => {

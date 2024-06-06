@@ -23,22 +23,6 @@ export const BoardSquare = ({
 }: BoardSquareProps) => {
   const isDark = (row + col) % 2 === 1;
 
-  const canMovePiece = () => {
-    if (!pieceType || !pieceId) {
-      return false;
-    }
-
-    const from = game.locatePiece(pieceId);
-
-    const possibleMove = findPieceMove(pieceType);
-
-    if (!from || !possibleMove) {
-      return false;
-    }
-
-    return possibleMove(from, [row, col]);
-  };
-
   const { isOver, setNodeRef } = useDroppable({
     id: `square-${row}-${col}`,
     data: { row, col },
@@ -48,7 +32,11 @@ export const BoardSquare = ({
     <Square
       ref={setNodeRef}
       isDark={isDark}
-      isAllowed={canMovePiece()}
+      isAllowed={
+        !!pieceId &&
+        !!pieceType &&
+        game.canMovePiece(pieceId, findPieceMove(pieceType), [row, col])
+      }
       isForbidden={isOver}
     >
       {children}
