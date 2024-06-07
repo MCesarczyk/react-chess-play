@@ -44,11 +44,15 @@ export const Board = ({ game }: BoardProps) => {
         row={row}
         col={col}
         game={game}
-        pieceType={draggedPiece?.type}
-        pieceId={draggedPiece?.id}
+        piece={draggedPiece || undefined}
       >
         {currentPiece && (
-          <Piece {...currentPiece} {...findPieceMove(currentPiece.type)} />
+          <Piece
+            piece={{
+              ...currentPiece,
+              canMovePiece: findPieceMove(currentPiece.type),
+            }}
+          />
         )}
       </BoardSquare>
     );
@@ -76,13 +80,8 @@ export const Board = ({ game }: BoardProps) => {
       return;
     }
 
-    const possibleMove = findPieceMove(draggedPiece?.type);
-
     destination &&
-      game.canMovePiece(draggedPiece.id, possibleMove, [
-        destination.row,
-        destination.col,
-      ]) &&
+      game.canMovePiece(draggedPiece, [destination.row, destination.col]) &&
       game.movePiece(draggedPiece.id, destination.row, destination.col);
     setDraggedPiece(null);
   }
@@ -96,7 +95,9 @@ export const Board = ({ game }: BoardProps) => {
       <BoardWrapper>{squares}</BoardWrapper>
 
       <DragOverlay adjustScale={true}>
-        {draggedPiece ? <Piece {...draggedPiece} id="dragged-piece" /> : null}
+        {draggedPiece ? (
+          <Piece piece={{ ...draggedPiece, id: 'dragged-piece' }} />
+        ) : null}
       </DragOverlay>
     </DndContext>
   );

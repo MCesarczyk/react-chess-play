@@ -1,5 +1,5 @@
 import { Coord } from './types';
-import { PieceMove, PieceRecord } from './piece/types';
+import { PieceItem, PieceRecord } from './piece/types';
 import { initialPieces } from './piece/initialPieces';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
@@ -46,10 +46,10 @@ export class Game {
     return currentPiece.location;
   }
 
-  public canMovePiece = (pieceId: string, pieceMove: PieceMove, to: Coord) => {
-    const from = this.locatePiece(pieceId);
+  public canMovePiece = (piece: PieceItem, to: Coord) => {
+    const from = this.locatePiece(piece.id);
 
-    if (!from || !pieceMove) {
+    if (!from || !piece.canMovePiece) {
       return false;
     }
 
@@ -153,7 +153,7 @@ export class Game {
       return false;
     }
 
-    return pieceMove(from, to);
+    return piece.canMovePiece(from, to);
   };
 
   public movePiece(pieceId: string, toX: number, toY: number) {
