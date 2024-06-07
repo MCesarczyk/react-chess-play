@@ -47,7 +47,7 @@ export class Game {
   }
 
   public canMovePiece = (piece: PieceItem, to: Coord) => {
-    const from = this.locatePiece(piece.id);
+    const from = piece.location;
 
     if (!from || !piece.canMovePiece) {
       return false;
@@ -104,7 +104,8 @@ export class Game {
     if (
       this.getPieces().some(
         (p) =>
-          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]) &&
+          Math.abs(p.location[0] - to[0]) === Math.abs(p.location[1] - to[1]) &&
           p.location[0] > to[0] &&
           p.location[0] < from[0] &&
           p.location[1] > to[1] &&
@@ -117,7 +118,8 @@ export class Game {
     if (
       this.getPieces().some(
         (p) =>
-          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]) &&
+          Math.abs(p.location[0] - to[0]) === Math.abs(p.location[1] - to[1]) &&
           p.location[0] < to[0] &&
           p.location[0] > from[0] &&
           p.location[1] < to[1] &&
@@ -130,7 +132,8 @@ export class Game {
     if (
       this.getPieces().some(
         (p) =>
-          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]) &&
+          Math.abs(p.location[0] - to[0]) === Math.abs(p.location[1] - to[1]) &&
           p.location[0] < to[0] &&
           p.location[0] > from[0] &&
           p.location[1] > to[1] &&
@@ -143,7 +146,8 @@ export class Game {
     if (
       this.getPieces().some(
         (p) =>
-          Math.abs(from[1] - from[0]) === Math.abs(from[0] - from[1]) &&
+          Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]) &&
+          Math.abs(p.location[0] - to[0]) === Math.abs(p.location[1] - to[1]) &&
           p.location[0] > to[0] &&
           p.location[0] < from[0] &&
           p.location[1] < to[1] &&
