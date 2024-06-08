@@ -30,6 +30,11 @@ export const Board = ({ game }: BoardProps) => {
 
   const [pieces, setPieces] = useState<PieceRecord[]>(game.getPieces());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
+  const [beatedPieces, setBeatedPieces] = useState<PieceRecord[]>([]);
+
+  useEffect(() => {
+    console.log(beatedPieces);
+  }, [beatedPieces]);
 
   useEffect(() => game.observe(setPieces), [game, draggedPiece]);
 
@@ -80,9 +85,23 @@ export const Board = ({ game }: BoardProps) => {
       return;
     }
 
-    destination &&
-      game.canMovePiece(draggedPiece, [destination.row, destination.col]) &&
-      game.movePiece(draggedPiece.id, destination.row, destination.col);
+    if (
+      destination &&
+      game.canMovePiece(draggedPiece, [destination.row, destination.col])
+    ) {
+      const { coincidedPiece, updatedPieces } = game.movePiece(
+        draggedPiece.id,
+        destination.row,
+        destination.col
+      );
+
+      if (coincidedPiece) {
+        game.setPieces([
+          ...updatedPieces.filter((p) => p.id !== coincidedPiece.id),
+        ]);
+        setBeatedPieces([...beatedPieces, coincidedPiece]);
+      }
+    }
     setDraggedPiece(null);
   }
 
