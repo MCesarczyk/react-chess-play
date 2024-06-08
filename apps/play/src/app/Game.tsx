@@ -166,8 +166,6 @@ export class Game {
   };
 
   public movePiece(pieceId: string, toX: number, toY: number) {
-    let coincidedPiece: PieceRecord | undefined;
-
     const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
       if (p.id === pieceId) {
         return { ...p, location: [toX, toY] };
@@ -176,18 +174,11 @@ export class Game {
       return p;
     });
 
-    const currentPiece = this.findPieceByCoord([toX, toY]);
-    const isSquareOccupied = Boolean(currentPiece);
-
-    if (isSquareOccupied) {
-      coincidedPiece = currentPiece;
-    }
-
     this.pieces = updatedPieces;
 
     this.emitChange();
 
-    return { coincidedPiece, updatedPieces };
+    return { updatedPieces };
   }
 
   public isEqualCoord(c1: Coord | undefined, c2: Coord | undefined): boolean {

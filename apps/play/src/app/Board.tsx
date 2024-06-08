@@ -89,17 +89,26 @@ export const Board = ({ game }: BoardProps) => {
       destination &&
       game.canMovePiece(draggedPiece, [destination.row, destination.col])
     ) {
-      const { coincidedPiece, updatedPieces } = game.movePiece(
+      const currentPiece = game.findPieceByCoord([
+        destination.row,
+        destination.col,
+      ]);
+
+      if (currentPiece?.colour === draggedPiece.colour) {
+        return;
+      }
+
+      const { updatedPieces } = game.movePiece(
         draggedPiece.id,
         destination.row,
         destination.col
       );
 
-      if (coincidedPiece) {
+      if (currentPiece) {
         game.setPieces([
-          ...updatedPieces.filter((p) => p.id !== coincidedPiece.id),
+          ...updatedPieces.filter((p) => p.id !== currentPiece.id),
         ]);
-        setBeatedPieces([...beatedPieces, coincidedPiece]);
+        setBeatedPieces([...beatedPieces, currentPiece]);
       }
     }
     setDraggedPiece(null);
