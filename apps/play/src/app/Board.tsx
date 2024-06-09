@@ -12,11 +12,11 @@ import {
   DragStartEvent,
 } from '@dnd-kit/core';
 import { Game } from './Game';
-import { Coord } from './types';
 import { BoardSquare } from './BoardSquare';
 import { Piece } from './piece/Piece';
-import { PieceItem, PieceRecord, PieceType } from './piece/types';
+import { PieceColour, PieceItem, PieceType } from './piece/types';
 import { findPieceMove } from './piece/availableMoves';
+import { Destination, GameState } from './types';
 
 interface BoardProps {
   game: Game;
@@ -29,13 +29,17 @@ export const Board = ({ game }: BoardProps) => {
     useSensor(KeyboardSensor)
   );
 
-  const [pieces, setPieces] = useState<PieceRecord[]>(game.pieces);
+  const [gameState, setGameState] = useState<GameState>(game.getGameState());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
 
-  useEffect(() => game.observe(setPieces), [game, draggedPiece]);
+  useEffect(() => {
+    console.log(gameState);
+  }, [gameState]);
+
+  useEffect(() => game.observe(setGameState), [game, draggedPiece]);
 
   function renderSquare(row: number, col: number) {
-    const currentPiece = pieces.find((p) =>
+    const currentPiece = gameState.pieces.find((p) =>
       game.isEqualCoord(p.location, [row, col])
     );
 
@@ -45,11 +49,15 @@ export const Board = ({ game }: BoardProps) => {
         row={row}
         col={col}
         game={game}
-        pieceType={draggedPiece?.type}
-        pieceId={draggedPiece?.id}
+        piece={draggedPiece || undefined}
       >
         {currentPiece && (
-          <Piece {...currentPiece} {...findPieceMove(currentPiece.type)} />
+          <Piece
+            piece={{
+              ...currentPiece,
+              canMovePiece: findPieceMove(currentPiece.type),
+            }}
+          />
         )}
       </BoardSquare>
     );
@@ -68,34 +76,70 @@ export const Board = ({ game }: BoardProps) => {
     currentEvent && setDraggedPiece(currentEvent.piece);
   }
 
-  const canMovePiece = (
-    pieceId: string,
-    pieceType: PieceType,
-    destination: Coord
-  ) => {
-    const from = game.locatePiece(pieceId);
-
-    const possibleMove = findPieceMove(pieceType);
-
-    if (!from || !possibleMove) {
-      return false;
-    }
-
-    return possibleMove(from, destination);
-  };
-
   function handleDragEnd(event: DragEndEvent) {
     const { over } = event;
 
-    const destination = over?.data.current;
+    const destination = over?.data.current as Destination | undefined;
 
-    draggedPiece &&
+    if (!draggedPiece) {
+      return;
+    }
+
+    if (
       destination &&
-      canMovePiece(draggedPiece.id, draggedPiece.type, [
+      game.canMovePiece(draggedPiece, [destination.row, destination.col])
+    ) {
+      let interferringPiece = game.findPieceByCoord([
         destination.row,
         destination.col,
-      ]) &&
-      game.movePiece(draggedPiece.id, destination.row, destination.col);
+      ]);
+
+      if (draggedPiece.type === PieceType.PAWN_WHITE && gameState.enPassant) {
+        const enPassantPiece = game.findPieceByCoord(gameState.enPassant);
+
+        if (
+          destination.col === gameState.enPassant[1] &&
+          destination.row === gameState.enPassant[0] - 1 &&
+          enPassantPiece?.colour === PieceColour.BLACK
+        ) {
+          interferringPiece = enPassantPiece;
+        }
+      }
+
+      if (draggedPiece.type === PieceType.PAWN_BLACK && gameState.enPassant) {
+        const enPassantPiece = game.findPieceByCoord(gameState.enPassant);
+
+        if (
+          destination.col === gameState.enPassant[1] &&
+          destination.row === gameState.enPassant[0] + 1 &&
+          enPassantPiece?.colour === PieceColour.WHITE
+        ) {
+          interferringPiece = enPassantPiece;
+        }
+      }
+
+      const { updatedPieces } = game.movePiece(
+        draggedPiece,
+        destination.row,
+        destination.col
+      );
+
+      if (interferringPiece) {
+        const { location, ...capturedPiece } = interferringPiece;
+
+        game.setGameState({
+          pieces: updatedPieces.filter((p) => p.id !== interferringPiece.id),
+          capturedPieces: [...gameState.capturedPieces, capturedPiece],
+          enPassant: null,
+        });
+      } else {
+        game.setGameState({
+          pieces: updatedPieces,
+          capturedPieces: gameState.capturedPieces,
+          enPassant: game.getEnPassant(draggedPiece, destination),
+        });
+      }
+    }
     setDraggedPiece(null);
   }
 
@@ -108,7 +152,9 @@ export const Board = ({ game }: BoardProps) => {
       <BoardWrapper>{squares}</BoardWrapper>
 
       <DragOverlay adjustScale={true}>
-        {draggedPiece ? <Piece {...draggedPiece} id="dragged-piece" /> : null}
+        {draggedPiece ? (
+          <Piece piece={{ ...draggedPiece, id: 'dragged-piece' }} />
+        ) : null}
       </DragOverlay>
     </DndContext>
   );

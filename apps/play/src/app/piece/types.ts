@@ -17,12 +17,15 @@ export enum PieceColour {
   WHITE = 'white',
 };
 
-export interface PieceRecord {
+export interface PieceData {
   id: string;
   type: PieceType;
   colour: PieceColour;
   image: string;
   alt: string;
+}
+
+export interface PieceRecord extends PieceData {
   location: Coord;
 }
 
