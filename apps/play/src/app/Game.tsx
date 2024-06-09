@@ -114,6 +114,22 @@ export class Game {
       piece.type === PieceType.PAWN_BLACK &&
       this.getPieces().some(
         (p) =>
+          this.enPassant &&
+          p.location[1] === this.enPassant[1] &&
+          p.location[0] === this.enPassant[0] &&
+          to[0] === this.enPassant[0] + 1 &&
+          to[1] === this.enPassant[1] &&
+          from[0] === this.enPassant[0] &&
+          [from[1] - 1, from[1] + 1].includes(this.enPassant[1])
+      )
+    ) {
+      return true;
+    }
+
+    if (
+      piece.type === PieceType.PAWN_BLACK &&
+      this.getPieces().some(
+        (p) =>
           p.location[0] === to[0] &&
           p.location[1] === to[1] &&
           p.location[0] === from[0] + 1 &&
@@ -146,6 +162,22 @@ export class Game {
           p.location[0] === from[0] - 1 &&
           p.location[1] === from[1] - 1 &&
           currentPiece?.colour === PieceColour.BLACK
+      )
+    ) {
+      return true;
+    }
+
+    if (
+      piece.type === PieceType.PAWN_WHITE &&
+      this.getPieces().some(
+        (p) =>
+          this.enPassant &&
+          p.location[1] === this.enPassant[1] &&
+          p.location[0] === this.enPassant[0] &&
+          to[0] === this.enPassant[0] - 1 &&
+          to[1] === this.enPassant[1] &&
+          from[0] === this.enPassant[0] &&
+          [from[1] - 1, from[1] + 1].includes(this.enPassant[1])
       )
     ) {
       return true;

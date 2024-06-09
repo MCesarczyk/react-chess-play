@@ -14,7 +14,7 @@ import {
 import { Game } from './Game';
 import { BoardSquare } from './BoardSquare';
 import { Piece } from './piece/Piece';
-import { PieceItem } from './piece/types';
+import { PieceColour, PieceItem, PieceType } from './piece/types';
 import { findPieceMove } from './piece/availableMoves';
 import { Destination, GameState } from './types';
 
@@ -89,10 +89,34 @@ export const Board = ({ game }: BoardProps) => {
       destination &&
       game.canMovePiece(draggedPiece, [destination.row, destination.col])
     ) {
-      const currentPiece = game.findPieceByCoord([
+      let interferringPiece = game.findPieceByCoord([
         destination.row,
         destination.col,
       ]);
+
+      if (draggedPiece.type === PieceType.PAWN_WHITE && gameState.enPassant) {
+        const enPassantPiece = game.findPieceByCoord(gameState.enPassant);
+
+        if (
+          destination.col === gameState.enPassant[1] &&
+          destination.row === gameState.enPassant[0] - 1 &&
+          enPassantPiece?.colour === PieceColour.BLACK
+        ) {
+          interferringPiece = enPassantPiece;
+        }
+      }
+
+      if (draggedPiece.type === PieceType.PAWN_BLACK && gameState.enPassant) {
+        const enPassantPiece = game.findPieceByCoord(gameState.enPassant);
+
+        if (
+          destination.col === gameState.enPassant[1] &&
+          destination.row === gameState.enPassant[0] + 1 &&
+          enPassantPiece?.colour === PieceColour.WHITE
+        ) {
+          interferringPiece = enPassantPiece;
+        }
+      }
 
       const { updatedPieces } = game.movePiece(
         draggedPiece,
@@ -100,11 +124,11 @@ export const Board = ({ game }: BoardProps) => {
         destination.col
       );
 
-      if (currentPiece) {
-        const { location, ...capturedPiece } = currentPiece;
+      if (interferringPiece) {
+        const { location, ...capturedPiece } = interferringPiece;
 
         game.setGameState({
-          pieces: updatedPieces.filter((p) => p.id !== currentPiece.id),
+          pieces: updatedPieces.filter((p) => p.id !== interferringPiece.id),
           capturedPieces: [...gameState.capturedPieces, capturedPiece],
           enPassant: null,
         });
