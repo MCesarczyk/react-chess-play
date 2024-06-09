@@ -1,5 +1,5 @@
 import { Coord } from './types';
-import { PieceItem, PieceRecord, PieceType } from './piece/types';
+import { PieceColour, PieceItem, PieceRecord, PieceType } from './piece/types';
 import { initialPieces } from './piece/initialPieces';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
@@ -68,7 +68,7 @@ export class Game {
           p.location[1] === to[1] &&
           p.location[0] === from[0] + 1 &&
           p.location[1] === from[1] + 1 &&
-          currentPiece?.type === PieceType.PAWN_WHITE
+          currentPiece?.colour === PieceColour.WHITE
       )
     ) {
       return true;
@@ -82,10 +82,23 @@ export class Game {
           p.location[1] === to[1] &&
           p.location[0] === from[0] + 1 &&
           p.location[1] === from[1] - 1 &&
-          currentPiece?.type === PieceType.PAWN_WHITE
+          currentPiece?.colour === PieceColour.WHITE
       )
     ) {
       return true;
+    }
+
+    if (
+      piece.type === PieceType.PAWN_BLACK &&
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[1] === to[1] &&
+          p.location[0] === from[0] + 1 &&
+          p.location[1] === from[1]
+      )
+    ) {
+      return false;
     }
 
     if (
@@ -96,7 +109,7 @@ export class Game {
           p.location[1] === to[1] &&
           p.location[0] === from[0] - 1 &&
           p.location[1] === from[1] + 1 &&
-          currentPiece?.type === PieceType.PAWN_BLACK
+          currentPiece?.colour === PieceColour.BLACK
       )
     ) {
       return true;
@@ -110,10 +123,23 @@ export class Game {
           p.location[1] === to[1] &&
           p.location[0] === from[0] - 1 &&
           p.location[1] === from[1] - 1 &&
-          currentPiece?.type === PieceType.PAWN_BLACK
+          currentPiece?.colour === PieceColour.BLACK
       )
     ) {
       return true;
+    }
+
+    if (
+      piece.type === PieceType.PAWN_WHITE &&
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[1] === to[1] &&
+          p.location[0] === from[0] - 1 &&
+          p.location[1] === from[1]
+      )
+    ) {
+      return false;
     }
 
     return piece.canMovePiece(from, to);
