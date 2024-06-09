@@ -30,11 +30,11 @@ export const Board = ({ game }: BoardProps) => {
 
   const [pieces, setPieces] = useState<PieceRecord[]>(game.getPieces());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
-  const [beatedPieces, setBeatedPieces] = useState<PieceRecord[]>([]);
+  const [capturedPieces, setCapturedPieces] = useState<PieceRecord[]>([]);
 
   useEffect(() => {
-    console.log(beatedPieces);
-  }, [beatedPieces]);
+    console.table(capturedPieces);
+  }, [capturedPieces]);
 
   useEffect(() => game.observe(setPieces), [game, draggedPiece]);
 
@@ -108,7 +108,7 @@ export const Board = ({ game }: BoardProps) => {
         game.setPieces([
           ...updatedPieces.filter((p) => p.id !== currentPiece.id),
         ]);
-        setBeatedPieces([...beatedPieces, currentPiece]);
+        setCapturedPieces([...capturedPieces, currentPiece]);
       }
     }
     setDraggedPiece(null);

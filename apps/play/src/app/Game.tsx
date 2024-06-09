@@ -1,5 +1,5 @@
 import { Coord } from './types';
-import { PieceItem, PieceRecord } from './piece/types';
+import { PieceItem, PieceRecord, PieceType } from './piece/types';
 import { initialPieces } from './piece/initialPieces';
 
 type Observer = ((pieces: PieceRecord[]) => void) | null;
@@ -51,13 +51,69 @@ export class Game {
     return currentPiece.location;
   }
 
-  public canMovePiece = (piece: PieceItem, to: Coord) => {
-    const from = piece.location;
+  private isPiecePawn(piece: PieceItem) {
+    return (
+      piece.type === PieceType.PAWN_BLACK || piece.type === PieceType.PAWN_WHITE
+    );
+  }
 
-    if (!from || !piece.canMovePiece) {
-      return false;
+  private canMovePawn = (piece: PieceItem, from: Coord, to: Coord) => {
+    if (
+      piece.type === PieceType.PAWN_BLACK &&
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[1] === to[1] &&
+          p.location[0] === from[0] + 1 &&
+          p.location[1] === from[1] + 1
+      )
+    ) {
+      return true;
     }
 
+    if (
+      piece.type === PieceType.PAWN_BLACK &&
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[1] === to[1] &&
+          p.location[0] === from[0] + 1 &&
+          p.location[1] === from[1] - 1
+      )
+    ) {
+      return true;
+    }
+
+    if (
+      piece.type === PieceType.PAWN_WHITE &&
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[1] === to[1] &&
+          p.location[0] === from[0] - 1 &&
+          p.location[1] === from[1] + 1
+      )
+    ) {
+      return true;
+    }
+
+    if (
+      piece.type === PieceType.PAWN_WHITE &&
+      this.getPieces().some(
+        (p) =>
+          p.location[0] === to[0] &&
+          p.location[1] === to[1] &&
+          p.location[0] === from[0] - 1 &&
+          p.location[1] === from[1] - 1
+      )
+    ) {
+      return true;
+    }
+
+    return piece.canMovePiece(from, to);
+  };
+
+  private canMovePieceNotPawn = (piece: PieceItem, from: Coord, to: Coord) => {
     if (
       this.getPieces().some(
         (p) =>
@@ -163,6 +219,18 @@ export class Game {
     }
 
     return piece.canMovePiece(from, to);
+  };
+
+  public canMovePiece = (piece: PieceItem, to: Coord) => {
+    const from = piece.location;
+
+    if (!from || !piece.canMovePiece) {
+      return false;
+    }
+
+    return this.isPiecePawn(piece)
+      ? this.canMovePawn(piece, from, to)
+      : this.canMovePieceNotPawn(piece, from, to);
   };
 
   public movePiece(pieceId: string, toX: number, toY: number) {
