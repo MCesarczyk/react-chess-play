@@ -14,8 +14,9 @@ import {
 import { Game } from './Game';
 import { BoardSquare } from './BoardSquare';
 import { Piece } from './piece/Piece';
-import { PieceData, PieceItem, PieceRecord } from './piece/types';
+import { PieceItem } from './piece/types';
 import { findPieceMove } from './piece/availableMoves';
+import { Destination, GameState } from './types';
 
 interface BoardProps {
   game: Game;
@@ -28,18 +29,17 @@ export const Board = ({ game }: BoardProps) => {
     useSensor(KeyboardSensor)
   );
 
-  const [pieces, setPieces] = useState<PieceRecord[]>(game.getPieces());
+  const [gameState, setGameState] = useState<GameState>(game.getGameState());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
-  const [capturedPieces, setCapturedPieces] = useState<PieceData[]>([]);
 
   useEffect(() => {
-    console.table(capturedPieces);
-  }, [capturedPieces]);
+    console.log(gameState);
+  }, [gameState]);
 
-  useEffect(() => game.observe(setPieces), [game, draggedPiece]);
+  useEffect(() => game.observe(setGameState), [game, draggedPiece]);
 
   function renderSquare(row: number, col: number) {
-    const currentPiece = pieces.find((p) =>
+    const currentPiece = gameState.pieces.find((p) =>
       game.isEqualCoord(p.location, [row, col])
     );
 
@@ -79,7 +79,7 @@ export const Board = ({ game }: BoardProps) => {
   function handleDragEnd(event: DragEndEvent) {
     const { over } = event;
 
-    const destination = over?.data.current;
+    const destination = over?.data.current as Destination | undefined;
 
     if (!draggedPiece) {
       return;
@@ -95,17 +95,25 @@ export const Board = ({ game }: BoardProps) => {
       ]);
 
       const { updatedPieces } = game.movePiece(
-        draggedPiece.id,
+        draggedPiece,
         destination.row,
         destination.col
       );
 
       if (currentPiece) {
-        game.setPieces([
-          ...updatedPieces.filter((p) => p.id !== currentPiece.id),
-        ]);
         const { location, ...capturedPiece } = currentPiece;
-        setCapturedPieces([...capturedPieces, capturedPiece]);
+
+        game.setGameState({
+          pieces: updatedPieces.filter((p) => p.id !== currentPiece.id),
+          capturedPieces: [...gameState.capturedPieces, capturedPiece],
+          enPassant: null,
+        });
+      } else {
+        game.setGameState({
+          pieces: updatedPieces,
+          capturedPieces: gameState.capturedPieces,
+          enPassant: game.getEnPassant(draggedPiece, destination),
+        });
       }
     }
     setDraggedPiece(null);

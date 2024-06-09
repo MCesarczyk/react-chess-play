@@ -1,17 +1,29 @@
-import { Coord } from './types';
-import { PieceColour, PieceItem, PieceRecord, PieceType } from './piece/types';
+import { Coord, Destination, GameState } from './types';
+import {
+  PieceColour,
+  PieceData,
+  PieceItem,
+  PieceRecord,
+  PieceType,
+} from './piece/types';
 import { initialPieces } from './piece/initialPieces';
 
-type Observer = ((pieces: PieceRecord[]) => void) | null;
+type Observer = ((gameState: GameState) => void) | null;
 
 export class Game {
   private pieces: PieceRecord[] = initialPieces;
+  private capturedPieces: PieceData[] = [];
+  private enPassant: Coord | null = null;
 
   private observers: Observer[] = [];
 
   private emitChange() {
-    const pieces = this.pieces;
-    this.observers.forEach((observer) => observer && observer(pieces));
+    const gameState = {
+      pieces: this.pieces,
+      capturedPieces: this.capturedPieces,
+      enPassant: this.enPassant,
+    };
+    this.observers.forEach((observer) => observer && observer(gameState));
   }
 
   private findPieceById(pieceId: string): PieceRecord | undefined {
@@ -24,12 +36,22 @@ export class Game {
     );
   }
 
-  public getPieces(): PieceRecord[] {
+  private getPieces(): PieceRecord[] {
     return this.pieces;
   }
 
-  public setPieces(pieces: PieceRecord[]) {
-    this.pieces = pieces;
+  public getGameState(): GameState {
+    return {
+      pieces: this.pieces,
+      capturedPieces: [],
+      enPassant: null,
+    };
+  }
+
+  public setGameState(gameState: GameState) {
+    this.pieces = gameState.pieces;
+    this.capturedPieces = gameState.capturedPieces;
+    this.enPassant = gameState.enPassant;
     this.emitChange();
   }
 
@@ -271,10 +293,31 @@ export class Game {
       : this.canMovePieceNotPawn(piece, from, to);
   };
 
-  public movePiece(pieceId: string, toX: number, toY: number) {
+  public getEnPassant = (
+    draggedPiece: PieceItem,
+    destination: Destination
+  ): Coord | null => {
+    if (
+      draggedPiece.type === PieceType.PAWN_WHITE &&
+      draggedPiece.location[0] === 6 &&
+      destination.row === 4
+    ) {
+      return [destination.row, destination.col];
+    } else if (
+      draggedPiece.type === PieceType.PAWN_BLACK &&
+      draggedPiece.location[0] === 1 &&
+      destination.row === 3
+    ) {
+      return [destination.row, destination.col];
+    } else {
+      return null;
+    }
+  };
+
+  public movePiece(piece: PieceItem, toX: number, toY: number) {
     const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
-      if (p.id === pieceId) {
-        return { ...p, location: [toX, toY] };
+      if (p.id === piece.id) {
+        return { ...piece, location: [toX, toY] };
       }
 
       return p;
