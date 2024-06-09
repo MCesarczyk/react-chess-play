@@ -255,8 +255,9 @@ export class Game {
 
   public canMovePiece = (piece: PieceItem, to: Coord) => {
     const from = piece.location;
+    const currentPiece = this.findPieceByCoord(to);
 
-    if (!from || !piece.canMovePiece) {
+    if (!from || !piece.canMovePiece || currentPiece?.type === PieceType.KING) {
       return false;
     }
 
