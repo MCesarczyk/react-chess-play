@@ -14,7 +14,7 @@ import {
 import { Game } from './Game';
 import { BoardSquare } from './BoardSquare';
 import { Piece } from './piece/Piece';
-import { PieceItem, PieceRecord } from './piece/types';
+import { PieceData, PieceItem, PieceRecord } from './piece/types';
 import { findPieceMove } from './piece/availableMoves';
 
 interface BoardProps {
@@ -30,7 +30,7 @@ export const Board = ({ game }: BoardProps) => {
 
   const [pieces, setPieces] = useState<PieceRecord[]>(game.getPieces());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
-  const [capturedPieces, setCapturedPieces] = useState<PieceRecord[]>([]);
+  const [capturedPieces, setCapturedPieces] = useState<PieceData[]>([]);
 
   useEffect(() => {
     console.table(capturedPieces);
@@ -108,7 +108,8 @@ export const Board = ({ game }: BoardProps) => {
         game.setPieces([
           ...updatedPieces.filter((p) => p.id !== currentPiece.id),
         ]);
-        setCapturedPieces([...capturedPieces, currentPiece]);
+        const { location, ...capturedPiece } = currentPiece;
+        setCapturedPieces([...capturedPieces, capturedPiece]);
       }
     }
     setDraggedPiece(null);
