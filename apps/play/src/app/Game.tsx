@@ -58,6 +58,8 @@ export class Game {
   }
 
   private canMovePawn = (piece: PieceItem, from: Coord, to: Coord) => {
+    const currentPiece = this.findPieceByCoord(to);
+
     if (
       piece.type === PieceType.PAWN_BLACK &&
       this.getPieces().some(
@@ -65,7 +67,8 @@ export class Game {
           p.location[0] === to[0] &&
           p.location[1] === to[1] &&
           p.location[0] === from[0] + 1 &&
-          p.location[1] === from[1] + 1
+          p.location[1] === from[1] + 1 &&
+          currentPiece?.type === PieceType.PAWN_WHITE
       )
     ) {
       return true;
@@ -78,7 +81,8 @@ export class Game {
           p.location[0] === to[0] &&
           p.location[1] === to[1] &&
           p.location[0] === from[0] + 1 &&
-          p.location[1] === from[1] - 1
+          p.location[1] === from[1] - 1 &&
+          currentPiece?.type === PieceType.PAWN_WHITE
       )
     ) {
       return true;
@@ -91,7 +95,8 @@ export class Game {
           p.location[0] === to[0] &&
           p.location[1] === to[1] &&
           p.location[0] === from[0] - 1 &&
-          p.location[1] === from[1] + 1
+          p.location[1] === from[1] + 1 &&
+          currentPiece?.type === PieceType.PAWN_BLACK
       )
     ) {
       return true;
@@ -104,7 +109,8 @@ export class Game {
           p.location[0] === to[0] &&
           p.location[1] === to[1] &&
           p.location[0] === from[0] - 1 &&
-          p.location[1] === from[1] - 1
+          p.location[1] === from[1] - 1 &&
+          currentPiece?.type === PieceType.PAWN_BLACK
       )
     ) {
       return true;
