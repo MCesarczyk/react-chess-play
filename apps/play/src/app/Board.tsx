@@ -94,10 +94,6 @@ export const Board = ({ game }: BoardProps) => {
         destination.col,
       ]);
 
-      if (currentPiece?.colour === draggedPiece.colour) {
-        return;
-      }
-
       const { updatedPieces } = game.movePiece(
         draggedPiece.id,
         destination.row,
