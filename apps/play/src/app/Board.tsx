@@ -1,42 +1,42 @@
-import { useEffect, useState } from 'react';
-import styled from '@emotion/styled';
 import {
   DndContext,
+  DragEndEvent,
   DragOverlay,
+  DragStartEvent,
   useSensors,
   useSensor,
   MouseSensor,
   TouchSensor,
   KeyboardSensor,
-  DragEndEvent,
-  DragStartEvent,
 } from '@dnd-kit/core';
+import styled from '@emotion/styled';
+
 import { Game } from './Game';
-import { BoardSquare } from './BoardSquare';
-import { Piece } from './piece/Piece';
-import { PieceColour, PieceItem, PieceType } from './piece/types';
-import { findPieceMove } from './piece/availableMoves';
 import { Destination, GameState } from './types';
+import { BoardSquare } from './BoardSquare';
+
+import { PieceColour, PieceItem, PieceType } from './piece/types';
+import { Piece } from './piece/Piece';
+import { findPieceMove } from './piece/availableMoves';
 
 interface BoardProps {
   game: Game;
+  gameState: GameState;
+  draggedPiece: PieceItem | null;
+  setDraggedPiece: (piece: PieceItem | null) => void;
 }
 
-export const Board = ({ game }: BoardProps) => {
+export const Board = ({
+  game,
+  gameState,
+  draggedPiece,
+  setDraggedPiece,
+}: BoardProps) => {
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
     useSensor(KeyboardSensor)
   );
-
-  const [gameState, setGameState] = useState<GameState>(game.getGameState());
-  const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
-
-  useEffect(() => {
-    console.log(gameState);
-  }, [gameState]);
-
-  useEffect(() => game.observe(setGameState), [game, draggedPiece]);
 
   function renderSquare(row: number, col: number) {
     const currentPiece = gameState.pieces.find((p) =>
@@ -164,9 +164,15 @@ const BoardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  width: 100%;
   max-width: 100svh;
-  margin: auto;
   aspect-ratio: 1 / 1;
   border: 4px solid #333;
+
+  @media (max-width: 1280px) {
+    width: 80%;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
