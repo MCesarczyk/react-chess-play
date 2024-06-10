@@ -42,7 +42,7 @@ const BoardWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   background-color: #a3a7b0;
 
   @media (max-width: 1024px) {
