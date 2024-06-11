@@ -41,11 +41,16 @@ const BoardWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  max-height: 100vh;
+  max-width: 100vw;
   background-color: #a3a7b0;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     flex-direction: column;
+  }
+
+  @media (orientation: landscape) {
+    flex-direction: row;
   }
 `;

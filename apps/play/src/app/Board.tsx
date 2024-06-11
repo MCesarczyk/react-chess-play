@@ -164,15 +164,8 @@ const BoardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
+  width: 100%;
   max-width: 100svh;
   aspect-ratio: 1 / 1;
   border: 4px solid #333;
-
-  @media (max-width: 1280px) {
-    width: 80%;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 `;

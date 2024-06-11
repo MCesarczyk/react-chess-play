@@ -35,11 +35,24 @@ export const Counter = ({ capturedPieces, colour }: CounterProps) => {
 
 const CounterWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: calc(0.5rem + 1vw);
   align-items: center;
-  flex-grow: 1;
-  padding: 1rem;
+  justify-content: center;
+  padding: calc(0.5rem + 1vw);
+  font-size: calc(0.5rem + 1vw);
+  background-color: #acc2ac;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+
+  @media screen and (min-width: 1024px) {
+    flex-direction: column;
+    font-size: 1.5rem;
+  }
+
+  @media (orientation: landscape) {
+    flex-direction: column;
+  }
 `;
 
 const Header = styled.h2`
@@ -50,7 +63,6 @@ const Header = styled.h2`
 const PiecesList = styled.ul`
   list-style-type: none;
   padding: 0;
-  font-size: 1.5rem;
   width: 100%;
   display: flex;
   align-items: center;
@@ -58,6 +70,11 @@ const PiecesList = styled.ul`
   gap: 1rem;
 
   @media screen and (min-width: 1024px) {
+    flex-direction: column;
+    font-size: 1.5rem;
+  }
+
+  @media (orientation: landscape) {
     flex-direction: column;
   }
 `;

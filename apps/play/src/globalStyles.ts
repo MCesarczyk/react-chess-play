@@ -18,6 +18,11 @@ export const globalStyles = css`
     -moz-osx-font-smoothing: grayscale;
   }
 
+  #root {
+    height: 100%;
+    max-height: 100vh;
+  }
+
   *:focus {
     outline-style: solid;
     outline-offset: -1px;
