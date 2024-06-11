@@ -35,19 +35,18 @@ export const Counter = ({ capturedPieces, colour }: CounterProps) => {
 
 const CounterWrapper = styled.div`
   display: flex;
-  gap: calc(0.5rem + 1vw);
+  gap: calc(0.5rem + 1svmin);
   align-items: center;
   justify-content: center;
-  padding: calc(0.5rem + 1vw);
-  font-size: calc(0.5rem + 1vw);
+  padding: calc(0.5rem + 1svmin);
+  font-size: calc(0.5rem + 1svmin);
   background-color: #acc2ac;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 1rem;
 
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     flex-direction: column;
-    font-size: 1.5rem;
   }
 
   @media (orientation: landscape) {
@@ -67,11 +66,11 @@ const PiecesList = styled.ul`
   display: flex;
   align-items: center;
   flex-direction: row;
-  gap: 1rem;
+  gap: calc(0.5rem + 1svmin);
+  font-size: 1.25em;
 
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     flex-direction: column;
-    font-size: 1.5rem;
   }
 
   @media (orientation: landscape) {
