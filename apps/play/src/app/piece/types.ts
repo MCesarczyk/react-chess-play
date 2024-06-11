@@ -23,6 +23,7 @@ export interface PieceData {
   colour: PieceColour;
   image: string;
   alt: string;
+  icon: string;
 }
 
 export interface PieceRecord extends PieceData {

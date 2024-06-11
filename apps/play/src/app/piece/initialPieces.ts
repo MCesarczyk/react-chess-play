@@ -20,6 +20,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: rookBlack,
     alt: 'Rook black right',
+    icon: '♜',
     location: [0, 0],
   },
   {
@@ -28,6 +29,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: bishopBlack,
     alt: 'Bishop black right',
+    icon: '♝',
     location: [0, 1],
   },
   {
@@ -36,6 +38,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: knightBlack,
     alt: 'Knight black right',
+    icon: '♞',
     location: [0, 2],
   },
   {
@@ -44,6 +47,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: queenBlack,
     alt: 'Queen black',
+    icon: '♛',
     location: [0, 3],
   },
   {
@@ -52,6 +56,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: kingBlack,
     alt: 'King black',
+    icon: '♚',
     location: [0, 4],
   },
   {
@@ -60,6 +65,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: knightBlack,
     alt: 'Knight black left',
+    icon: '♞',
     location: [0, 5],
   },
   {
@@ -68,6 +74,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: bishopBlack,
     alt: 'Bishop black left',
+    icon: '♝',
     location: [0, 6],
   },
   {
@@ -76,6 +83,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.BLACK,
     image: rookBlack,
     alt: 'Rook black left',
+    icon: '♜',
     location: [0, 7],
   },
   ...Object.values(
@@ -87,6 +95,7 @@ export const initialPieces: PieceRecord[] = [
         colour: PieceColour.BLACK,
         image: pawnBlack,
         alt: 'Pawn black',
+        icon: '♟',
         location: [1, i],
       } as PieceRecord)
     )
@@ -97,6 +106,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: rookWhite,
     alt: 'Rook white left',
+    icon: '♖',
     location: [7, 0],
   },
   {
@@ -105,6 +115,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: bishopWhite,
     alt: 'Bishop white left',
+    icon: '♗',
     location: [7, 1],
   },
   {
@@ -113,6 +124,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: knightWhite,
     alt: 'Knight white left',
+    icon: '♘',
     location: [7, 2],
   },
   {
@@ -121,6 +133,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: queenWhite,
     alt: 'Queen white',
+    icon: '♕',
     location: [7, 3],
   },
   {
@@ -129,6 +142,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: kingWhite,
     alt: 'King white',
+    icon: '♔',
     location: [7, 4],
   },
   {
@@ -137,6 +151,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: knightWhite,
     alt: 'Knight white right',
+    icon: '♘',
     location: [7, 5],
   },
   {
@@ -145,6 +160,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: bishopWhite,
     alt: 'Bishop white right',
+    icon: '♗',
     location: [7, 6],
   },
   {
@@ -153,6 +169,7 @@ export const initialPieces: PieceRecord[] = [
     colour: PieceColour.WHITE,
     image: rookWhite,
     alt: 'Rook white right',
+    icon: '♖',
     location: [7, 7],
   },
   ...Object.values(
@@ -164,6 +181,7 @@ export const initialPieces: PieceRecord[] = [
         colour: PieceColour.WHITE,
         image: pawnWhite,
         alt: 'Pawn white',
+        icon: '♙',
         location: [6, 7 - i],
       } as PieceRecord)
     )

@@ -40,6 +40,10 @@ export class Game {
     return this.pieces;
   }
 
+  public getCapturedPieces(): PieceData[] {
+    return this.capturedPieces;
+  }
+
   public getGameState(): GameState {
     return {
       pieces: this.pieces,

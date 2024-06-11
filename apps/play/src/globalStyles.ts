@@ -13,9 +13,17 @@ export const globalStyles = css`
   body {
     margin: 0;
     height: 100%;
-    font-family: 'AvenirStd';
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    height: 100%;
+    max-height: 100vh;
   }
 
   *:focus {
