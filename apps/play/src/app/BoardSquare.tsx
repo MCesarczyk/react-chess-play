@@ -31,6 +31,8 @@ export const BoardSquare = ({
       isDark={isDark}
       isAllowed={!!piece && game.canMovePiece(piece, [row, col])}
       isForbidden={isOver}
+      isCheck={false}
+      // isCheck={!!piece && game.canCheck(piece, [row, col])}
     >
       {children}
     </Square>

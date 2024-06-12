@@ -315,12 +315,7 @@ export class Game {
     const from = piece.location;
     const currentPiece = this.findPieceByCoord(to);
 
-    if (
-      !from ||
-      !piece.canMovePiece ||
-      piece.colour === currentPiece?.colour ||
-      currentPiece?.type === PieceType.KING
-    ) {
+    if (!from || !piece.canMovePiece || piece.colour === currentPiece?.colour) {
       return false;
     }
 

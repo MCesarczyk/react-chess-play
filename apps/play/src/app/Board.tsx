@@ -18,6 +18,7 @@ import { BoardSquare } from './BoardSquare';
 import { PieceColour, PieceItem, PieceType } from './piece/types';
 import { Piece } from './piece/Piece';
 import { findPieceMove } from './piece/availableMoves';
+import { useState } from 'react';
 
 interface BoardProps {
   game: Game;
@@ -37,6 +38,8 @@ export const Board = ({
     useSensor(TouchSensor),
     useSensor(KeyboardSensor)
   );
+
+  const [check, setCheck] = useState(false);
 
   function renderSquare(row: number, col: number) {
     const currentPiece = gameState.pieces.find((p) =>
@@ -140,6 +143,25 @@ export const Board = ({
         });
       }
     }
+
+    const opponentKingLocation = gameState.pieces.find(
+      (p) => p.type === PieceType.KING && p.colour !== draggedPiece.colour
+    );
+
+    setCheck(false);
+
+    squares.forEach(
+      (s) =>
+        destination &&
+        game.canMovePiece(
+          { ...draggedPiece, location: [destination.row, destination.col] },
+          [s.props.row, s.props.col]
+        ) &&
+        s.props.row === opponentKingLocation?.location[0] &&
+        s.props.col === opponentKingLocation?.location[1] &&
+        setCheck(true)
+    );
+
     setDraggedPiece(null);
   }
 
@@ -149,7 +171,7 @@ export const Board = ({
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <BoardWrapper>{squares}</BoardWrapper>
+      <BoardWrapper {...{ check }}>{squares}</BoardWrapper>
 
       <DragOverlay adjustScale={true}>
         {draggedPiece ? (
@@ -160,12 +182,12 @@ export const Board = ({
   );
 };
 
-const BoardWrapper = styled.div`
+const BoardWrapper = styled.div<{ check?: boolean }>`
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
   width: 100%;
   max-width: 100svh;
   aspect-ratio: 1 / 1;
-  border: 4px solid #333;
+  border: ${({ check }) => `4px solid ${check ? '#dc143c' : '#333'}`};
 `;
