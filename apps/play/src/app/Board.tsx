@@ -144,9 +144,10 @@ export const Board = ({
       }
     }
 
-    const opponentKingLocation = gameState.pieces.find(
-      (p) => p.type === PieceType.KING && p.colour !== draggedPiece.colour
-    );
+    const opponentKingLocation = (colour: PieceColour) =>
+      gameState.pieces.find(
+        (p) => p.type === PieceType.KING && p.colour !== colour
+      );
 
     setCheck(false);
 
@@ -157,9 +158,27 @@ export const Board = ({
           { ...draggedPiece, location: [destination.row, destination.col] },
           [s.props.row, s.props.col]
         ) &&
-        s.props.row === opponentKingLocation?.location[0] &&
-        s.props.col === opponentKingLocation?.location[1] &&
+        s.props.row ===
+          opponentKingLocation(draggedPiece.colour)?.location[0] &&
+        s.props.col ===
+          opponentKingLocation(draggedPiece.colour)?.location[1] &&
         setCheck(true)
+    );
+
+    gameState.pieces.forEach((p) =>
+      squares.forEach(
+        (s) =>
+          game.canMovePiece(
+            {
+              ...p,
+              canMovePiece: findPieceMove(p.type),
+            },
+            [s.props.row, s.props.col]
+          ) &&
+          s.props.row === opponentKingLocation(p.colour)?.location[0] &&
+          s.props.col === opponentKingLocation(p.colour)?.location[1] &&
+          setCheck(true)
+      )
     );
 
     setDraggedPiece(null);
