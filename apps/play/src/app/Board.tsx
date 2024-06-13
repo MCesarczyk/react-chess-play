@@ -18,7 +18,7 @@ import { BoardSquare } from './BoardSquare';
 import { PieceColour, PieceItem, PieceType } from './piece/types';
 import { Piece } from './piece/Piece';
 import { findPieceMove } from './piece/availableMoves';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface BoardProps {
   game: Game;
@@ -74,6 +74,30 @@ export const Board = ({
     }
   }
 
+  const handleCheckPrediction = () => {
+    setCheck(false);
+
+    gameState.pieces.forEach((p) =>
+      squares.forEach(
+        (s) =>
+          game.canMovePiece(
+            {
+              ...p,
+              canMovePiece: findPieceMove(p.type),
+            },
+            [s.props.row, s.props.col]
+          ) &&
+          s.props.row === game.opponentKingLocation(p.colour)?.location[0] &&
+          s.props.col === game.opponentKingLocation(p.colour)?.location[1] &&
+          setCheck(true)
+      )
+    );
+  };
+
+  useEffect(() => {
+    handleCheckPrediction();
+  }, [gameState.pieces]); // eslint-disable-line react-hooks/exhaustive-deps
+
   function handleDragStart(event: DragStartEvent) {
     const currentEvent = event.active.data.current;
     currentEvent && setDraggedPiece(currentEvent.piece);
@@ -84,18 +108,20 @@ export const Board = ({
 
     const destination = over?.data.current as Destination | undefined;
 
-    if (!draggedPiece) {
+    if (!draggedPiece || !destination) {
       return;
     }
 
-    if (
-      destination &&
-      game.canMovePiece(draggedPiece, [destination.row, destination.col])
-    ) {
+    if (game.canMovePiece(draggedPiece, [destination.row, destination.col])) {
       let interferringPiece = game.findPieceByCoord([
         destination.row,
         destination.col,
       ]);
+
+      if (interferringPiece?.type === PieceType.KING) {
+        setDraggedPiece(null);
+        return;
+      }
 
       if (draggedPiece.type === PieceType.PAWN_WHITE && gameState.enPassant) {
         const enPassantPiece = game.findPieceByCoord(gameState.enPassant);
@@ -127,7 +153,7 @@ export const Board = ({
         destination.col
       );
 
-      if (interferringPiece) {
+      if (interferringPiece && interferringPiece.type) {
         const { location, ...capturedPiece } = interferringPiece;
 
         game.setGameState({
@@ -143,43 +169,6 @@ export const Board = ({
         });
       }
     }
-
-    const opponentKingLocation = (colour: PieceColour) =>
-      gameState.pieces.find(
-        (p) => p.type === PieceType.KING && p.colour !== colour
-      );
-
-    setCheck(false);
-
-    squares.forEach(
-      (s) =>
-        destination &&
-        game.canMovePiece(
-          { ...draggedPiece, location: [destination.row, destination.col] },
-          [s.props.row, s.props.col]
-        ) &&
-        s.props.row ===
-          opponentKingLocation(draggedPiece.colour)?.location[0] &&
-        s.props.col ===
-          opponentKingLocation(draggedPiece.colour)?.location[1] &&
-        setCheck(true)
-    );
-
-    gameState.pieces.forEach((p) =>
-      squares.forEach(
-        (s) =>
-          game.canMovePiece(
-            {
-              ...p,
-              canMovePiece: findPieceMove(p.type),
-            },
-            [s.props.row, s.props.col]
-          ) &&
-          s.props.row === opponentKingLocation(p.colour)?.location[0] &&
-          s.props.col === opponentKingLocation(p.colour)?.location[1] &&
-          setCheck(true)
-      )
-    );
 
     setDraggedPiece(null);
   }
