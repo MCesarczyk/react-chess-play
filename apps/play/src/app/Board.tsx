@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import {
   DndContext,
   DragEndEvent,
@@ -9,16 +10,13 @@ import {
   TouchSensor,
   KeyboardSensor,
 } from '@dnd-kit/core';
-import styled from '@emotion/styled';
-
 import { Game } from './Game';
 import { Destination, GameState } from './types';
 import { BoardSquare } from './BoardSquare';
-
 import { PieceColour, PieceItem, PieceType } from './piece/types';
 import { Piece } from './piece/Piece';
 import { findPieceMove } from './piece/availableMoves';
-import { useEffect, useState } from 'react';
+import { useCheck } from './useCheck';
 
 interface BoardProps {
   game: Game;
@@ -43,7 +41,9 @@ export const Board = ({
     useSensor(KeyboardSensor)
   );
 
-  const [check, setCheck] = useState<PieceColour | null>(null);
+  const squares: JSX.Element[] = [];
+
+  const { check } = useCheck(game, gameState, squares);
 
   function renderSquare(row: number, col: number) {
     const currentPiece = gameState.pieces.find((p) =>
@@ -76,37 +76,11 @@ export const Board = ({
     );
   }
 
-  const squares: JSX.Element[] = [];
-
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       squares.push(renderSquare(row, col));
     }
   }
-
-  const handleCheckPrediction = () => {
-    setCheck(null);
-
-    gameState.pieces.forEach((p) =>
-      squares.forEach(
-        (s) =>
-          game.canMovePiece(
-            {
-              ...p,
-              canMovePiece: findPieceMove(p.type),
-            },
-            [s.props.row, s.props.col]
-          ) &&
-          s.props.row === game.findOpponentKing(p.colour)?.location[0] &&
-          s.props.col === game.findOpponentKing(p.colour)?.location[1] &&
-          setCheck(game.findOpponentKing(p.colour)?.colour ?? null)
-      )
-    );
-  };
-
-  useEffect(() => {
-    handleCheckPrediction();
-  }, [gameState.pieces]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleDragStart(event: DragStartEvent) {
     const currentEvent = event.active.data.current;
