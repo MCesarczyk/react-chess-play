@@ -14,6 +14,7 @@ interface PageProps {
 export const Page = ({ game }: PageProps) => {
   const [gameState, setGameState] = useState<GameState>(game.getGameState());
   const [draggedPiece, setDraggedPiece] = useState<PieceItem | null>(null);
+  const [activeColour, setActiveColour] = useState(PieceColour.WHITE);
 
   useEffect(() => game.observe(setGameState), [game, draggedPiece]);
 
@@ -22,16 +23,20 @@ export const Page = ({ game }: PageProps) => {
       <Counter
         capturedPieces={gameState.capturedPieces}
         colour={PieceColour.BLACK}
+        activeColour={activeColour}
       />
       <Board
         game={game}
         gameState={gameState}
         draggedPiece={draggedPiece}
         setDraggedPiece={setDraggedPiece}
+        activeColour={activeColour}
+        setActiveColour={setActiveColour}
       />
       <Counter
         capturedPieces={gameState.capturedPieces}
         colour={PieceColour.WHITE}
+        activeColour={activeColour}
       />
     </BoardWrapper>
   );

@@ -4,9 +4,14 @@ import { PieceColour, PieceData } from '../piece/types';
 interface CounterProps {
   capturedPieces: PieceData[];
   colour: PieceColour;
+  activeColour: PieceColour;
 }
 
-export const Counter = ({ capturedPieces, colour }: CounterProps) => {
+export const Counter = ({
+  capturedPieces,
+  colour,
+  activeColour,
+}: CounterProps) => {
   const currentPieces = capturedPieces.filter((p) => p.colour === colour);
   const currentTypes = currentPieces.map((p) => p.type);
   const distinctTypes = [...new Set(currentTypes)];
@@ -21,7 +26,7 @@ export const Counter = ({ capturedPieces, colour }: CounterProps) => {
 
   return (
     <CounterWrapper>
-      <Header>{colour.toUpperCase()}</Header>
+      <Header active={activeColour === colour}>{colour.toUpperCase()}</Header>
       <PiecesList>
         {distinctTypes.map((type) => (
           <li key={type}>
@@ -54,9 +59,11 @@ const CounterWrapper = styled.div`
   }
 `;
 
-const Header = styled.h2`
+const Header = styled.h2<{ active?: boolean }>`
   flex-grow: 1;
   text-align: center;
+  font-weight: 700;
+  color: ${({ active }) => (active ? 'crimson' : 'black')};
 `;
 
 const PiecesList = styled.ul`

@@ -9,6 +9,7 @@ interface BoardSquareProps {
   children: React.ReactNode;
   game: Game;
   piece: PieceItem | undefined;
+  isCheck: boolean;
 }
 
 export const BoardSquare = ({
@@ -17,6 +18,7 @@ export const BoardSquare = ({
   children,
   game,
   piece,
+  isCheck,
 }: BoardSquareProps) => {
   const isDark = (row + col) % 2 === 1;
 
@@ -31,6 +33,7 @@ export const BoardSquare = ({
       isDark={isDark}
       isAllowed={!!piece && game.canMovePiece(piece, [row, col])}
       isForbidden={isOver}
+      isCheck={isCheck}
     >
       {children}
     </Square>

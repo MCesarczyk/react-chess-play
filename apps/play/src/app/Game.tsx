@@ -52,6 +52,9 @@ export class Game {
     };
   }
 
+  public findOpponentKing = (colour: PieceColour) =>
+    this.pieces.find((p) => p.type === PieceType.KING && p.colour !== colour);
+
   public setGameState(gameState: GameState) {
     this.pieces = gameState.pieces;
     this.capturedPieces = gameState.capturedPieces;
@@ -315,12 +318,7 @@ export class Game {
     const from = piece.location;
     const currentPiece = this.findPieceByCoord(to);
 
-    if (
-      !from ||
-      !piece.canMovePiece ||
-      piece.colour === currentPiece?.colour ||
-      currentPiece?.type === PieceType.KING
-    ) {
+    if (!from || !piece.canMovePiece || piece.colour === currentPiece?.colour) {
       return false;
     }
 
@@ -364,6 +362,20 @@ export class Game {
     this.emitChange();
 
     return { updatedPieces };
+  }
+
+  public abortMovePiece(piece: PieceItem) {
+    const updatedPieces: PieceRecord[] = this.pieces.map((p) => {
+      if (p.id === piece.id) {
+        return { ...piece };
+      }
+
+      return p;
+    });
+
+    this.pieces = updatedPieces;
+
+    this.emitChange();
   }
 
   public isEqualCoord(c1: Coord | undefined, c2: Coord | undefined): boolean {

@@ -5,19 +5,22 @@ interface SquareProps {
   isDark: boolean;
   isAllowed: boolean;
   isForbidden: boolean;
+  isCheck: boolean;
   children: React.ReactNode;
 }
 
 export const Square = forwardRef(
   (props: SquareProps, ref: ForwardedRef<HTMLDivElement>) => {
-    const { isDark, isAllowed, isForbidden, children } = props;
+    const { isDark, isAllowed, isForbidden, isCheck, children } = props;
 
     let bgColor = undefined;
 
     if (isAllowed) {
-      bgColor = '#fffc5c';
+      bgColor = '#fffd6d';
     } else if (isForbidden) {
-      bgColor = '#ff6459';
+      bgColor = '#ff8b50';
+    } else if (isCheck) {
+      bgColor = '#ff4d4d';
     } else {
       bgColor = isDark ? '#111' : '#fff';
     }
