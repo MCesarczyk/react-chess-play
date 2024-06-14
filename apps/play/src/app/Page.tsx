@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { Game } from './Game';
 import { PieceColour, PieceItem } from './piece/types';
 import { GameState } from './types';
-import { Board } from './Board';
+import { Board } from './board/Board';
 import { Counter } from './counter/Counter';
 
 interface PageProps {

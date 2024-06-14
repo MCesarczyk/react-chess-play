@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { PieceColour } from "./piece/types";
-import { findPieceMove } from "./piece/availableMoves";
-import { Game } from "./Game";
-import { GameState } from "./types";
+import { PieceColour } from "../piece/types";
+import { findPieceMove } from "../piece/availableMoves";
+import { Game } from "../Game";
+import { GameState } from "../types";
 
 
 export const useCheck = (game: Game, gameState: GameState, squares: JSX.Element[]) => {
