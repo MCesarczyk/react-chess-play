@@ -52,7 +52,7 @@ export class Game {
     };
   }
 
-  public opponentKingLocation = (colour: PieceColour) =>
+  public findOpponentKing = (colour: PieceColour) =>
     this.pieces.find((p) => p.type === PieceType.KING && p.colour !== colour);
 
   public setGameState(gameState: GameState) {
